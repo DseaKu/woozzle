@@ -1,3 +1,12 @@
+use bevy::prelude::*;
+
+mod input;
+mod ui;
+
 fn main() {
-    println!("Hello, world!");
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_plugins(ui::UiPlugin)
+        .add_plugins(input::InputPlugin)
+        .run();
 }
