@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+mod camera;
 mod input;
 mod ui;
 
@@ -8,5 +9,6 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugins(ui::UiPlugin)
         .add_plugins(input::InputPlugin)
+        .add_plugins(camera::CameraPlugin)
         .run();
 }
