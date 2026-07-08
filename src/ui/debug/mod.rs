@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-mod event;
+mod system;
 
 const LEFT_MARGIN: f32 = 20.0;
 const TOP_MARGIN: f32 = 20.0;
@@ -9,7 +9,7 @@ const INDENTED_MARGIN: f32 = 30.0;
 pub struct DebugUiPlugin;
 impl Plugin for DebugUiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(event::EventPlugin);
+        app.add_plugins(system::SystemPlugin);
     }
 }
 
@@ -27,7 +27,6 @@ impl RootNodeBundle {
                 position_type: PositionType::Absolute,
                 left: Val::Px(LEFT_MARGIN),
                 top: Val::Px(TOP_MARGIN),
-                // Stack Children in a column
                 flex_direction: FlexDirection::Column,
                 ..default()
             },
