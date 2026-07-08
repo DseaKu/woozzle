@@ -3,29 +3,39 @@ use super::events;
 use super::resources;
 use crate::input;
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 
 pub fn show_debug_ui(
     _trigger: On<events::ShowDebugUi>,
     mut commands: Commands,
     mut debug_ui_state: ResMut<resources::DebugUiState>,
-    mouse_parameters: Res<resources::MouseParameters>,
+    mouse_text: Res<resources::MouseText>,
 ) {
     use components::{RootNodeBundle, SubNode};
-    let mouse_world_pos = mouse_parameters.world_pos.unwrap_or_default();
+
     commands
         .spawn(RootNodeBundle::new())
         .with_children(|builder| {
             builder.spawn(SubNode::new("Mouse"));
-            builder.spawn(SubNode::new_indented(&format!(
-                "World Pos: {}",
-                mouse_world_pos.x
-            )));
-            builder.spawn(SubNode::new_indented("Hex Pos: None"));
+            builder.spawn(SubNode::new_indented(&mouse_text.world_pos));
         });
     debug_ui_state.is_enabled = true;
 }
 
-pub fn update_mouse_parameters(_trigger: On<events::ShowDebugUi>) {}
+pub fn update_mouse_txt(
+    mut mouse_text: ResMut<resources::MouseText>,
+    debug_ui_state: Res<resources::DebugUiState>,
+    window: Single<&Window, With<PrimaryWindow>>,
+) {
+    if !debug_ui_state.is_enabled {
+        return;
+    }
+    mouse_text.world_pos = if let Some(coords) = window.cursor_position() {
+        format!("x={}", coords.x)
+    } else {
+        "x=NaN".to_string()
+    };
+}
 
 pub fn hide_debug_ui(
     _trigger: On<events::HideDebugUi>,

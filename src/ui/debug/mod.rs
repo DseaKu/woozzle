@@ -11,7 +11,8 @@ impl Plugin for DebugUiPlugin {
         app.add_observer(systems::toggle_debug_ui)
             .add_observer(systems::show_debug_ui)
             .add_observer(systems::hide_debug_ui)
-            .add_observer(systems::update_mouse_parameters)
-            .init_resource::<resources::DebugUiState>();
+            .add_systems(Update, systems::update_mouse_txt)
+            .init_resource::<resources::DebugUiState>()
+            .init_resource::<resources::MouseText>();
     }
 }

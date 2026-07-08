@@ -7,6 +7,9 @@ const INDENTED_MARGIN: f32 = 30.0;
 #[derive(Component)]
 pub struct RootNodeLabel;
 
+#[derive(Component)]
+pub struct MouseWorldPosTextLabel;
+
 #[derive(Bundle)]
 pub struct RootNodeBundle {
     node: Node,
