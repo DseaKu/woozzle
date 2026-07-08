@@ -1,10 +1,10 @@
 use bevy::prelude::*;
 
-mod debug_ui;
+mod debug;
 
 pub struct UiPlugin;
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(debug_ui::DebugUiPlugin);
+        app.add_plugins(debug::DebugUiPlugin);
     }
 }

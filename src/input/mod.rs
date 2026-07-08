@@ -9,7 +9,6 @@ impl Plugin for InputPlugin {
 
 #[derive(Event)]
 pub struct ToggleDebugUiEvent;
-
 fn trigger_debug_ui_toggle(keyboard_input: Res<ButtonInput<KeyCode>>, mut commands: Commands) {
     if keyboard_input.just_pressed(KeyCode::Tab) {
         commands.trigger(ToggleDebugUiEvent);

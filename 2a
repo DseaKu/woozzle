@@ -9,22 +9,23 @@ impl Plugin for DebugUiPlugin {
     fn build(&self, app: &mut App) {
         app.add_observer(handle_ui_toggle)
             .add_observer(spawn_debug_ui)
-            .init_resource::<DebugUiState>()
-            .add_observer(despawn_debug_ui);
+            .add_observer(despawn_debug_ui)
+            .init_resource::<DebugUiState>();
     }
 }
 
 #[derive(Component)]
-struct DebugUiLabel;
-
+struct RootNodeLabel;
 #[derive(Bundle)]
-struct DebugUiBundle {
+struct DebugRootUiBundle {
     node: Node,
     text: Text,
-    label: DebugUiLabel,
+    label: RootNodeLabel,
+    font: TextFont,
 }
-impl DebugUiBundle {
-    fn new() -> Self {
+
+impl DebugRootUiBundle {
+    fn new(font_handle: FontSource) -> Self {
         Self {
             node: Node {
                 position_type: PositionType::Absolute,
@@ -32,8 +33,13 @@ impl DebugUiBundle {
                 top: Val::Px(TOP_MARGIN),
                 ..default()
             },
-            text: Text::new("test"),
-            label: DebugUiLabel,
+            font: TextFont {
+                font: font_handle,
+                font_size: FontSize::Px(3.0),
+                ..default()
+            },
+            text: Text::new("Root Node"),
+            label: RootNodeLabel,
         }
     }
 }
@@ -49,10 +55,8 @@ pub fn handle_ui_toggle(
     debug_ui_state: Res<DebugUiState>,
 ) {
     if !debug_ui_state.is_enabled {
-        println!("spawn");
         commands.trigger(PendingSpawnDebugUiEvent);
     } else {
-        println!("despawn");
         commands.trigger(PendingDespawnDebugUiEvent);
     }
 }
@@ -65,8 +69,8 @@ fn spawn_debug_ui(
     asset_server: Res<AssetServer>,
     mut debug_ui_state: ResMut<DebugUiState>,
 ) {
-    let _font = FontSource::from(asset_server.load("fonts/Hack-Regular.ttf"));
-    commands.spawn(DebugUiBundle::new());
+    let font = FontSource::from(asset_server.load("fonts/Hack-Regular.ttf"));
+    // commands.spawn(DebugRootUiBundle::new());
     debug_ui_state.is_enabled = true;
 }
 
@@ -75,7 +79,7 @@ struct PendingDespawnDebugUiEvent;
 fn despawn_debug_ui(
     _trigger: On<PendingDespawnDebugUiEvent>,
     mut commands: Commands,
-    debug_ui_entity: Single<Entity, With<DebugUiLabel>>,
+    debug_ui_entity: Single<Entity, With<RootNodeLabel>>,
     mut debug_ui_state: ResMut<DebugUiState>,
 ) {
     commands.entity(*debug_ui_entity).despawn();
