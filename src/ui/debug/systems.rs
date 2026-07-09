@@ -11,13 +11,13 @@ pub fn show_debug_ui(
     mut debug_ui_state: ResMut<resources::DebugUiState>,
     mouse_text: Res<resources::MouseText>,
 ) {
-    use components::{RootNodeBundle, SubNode};
+    use components::*;
 
     commands
         .spawn(RootNodeBundle::new())
         .with_children(|builder| {
-            builder.spawn(SubNode::new("Mouse"));
-            builder.spawn(SubNode::new_indented(&mouse_text.world_pos));
+            builder.spawn(ContainerNode::new("Mouse"));
+            builder.spawn(ItemText::new(&mouse_text.world_pos, MouseWorldPosTextLabel));
         });
     debug_ui_state.is_enabled = true;
 }
@@ -48,7 +48,7 @@ pub fn hide_debug_ui(
 }
 
 pub fn toggle_debug_ui(
-    _trigger: On<input::ToggleDebugUiEvent>,
+    _trigger: On<input::events::ToggleDebugUiEvent>,
     mut commands: Commands,
     debug_ui_state: Res<resources::DebugUiState>,
 ) {

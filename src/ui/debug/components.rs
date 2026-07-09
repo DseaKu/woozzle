@@ -32,12 +32,12 @@ impl RootNodeBundle {
 }
 
 #[derive(Bundle)]
-pub struct SubNode {
+pub struct ContainerNode {
     text: Text,
     node: Node,
 }
 
-impl SubNode {
+impl ContainerNode {
     pub fn new(text: &str) -> Self {
         Self {
             text: Text::new(text),
@@ -47,7 +47,16 @@ impl SubNode {
             },
         }
     }
-    pub fn new_indented(text: &str) -> Self {
+}
+
+#[derive(Bundle)]
+pub struct ItemText<L: Component> {
+    text: Text,
+    node: Node,
+    label: L,
+}
+impl<L: Component> ItemText<L> {
+    pub fn new(text: &str, label: L) -> Self {
         Self {
             text: Text::new(text),
             node: Node {
@@ -55,12 +64,7 @@ impl SubNode {
                 margin: UiRect::left(Val::Px(INDENTED_MARGIN)),
                 ..default()
             },
+            label,
         }
     }
 }
-
-#[derive(Component)]
-pub struct MousePosText;
-
-#[derive(Component)]
-pub struct HexPosText;

@@ -7,5 +7,5 @@ pub struct DebugUiState {
 #[derive(Resource, Default)]
 pub struct MouseText {
     pub world_pos: String,
-    pub hex_pos: Option<Vec2>,
+    // pub hex_pos: Option<Vec2>,
 }
