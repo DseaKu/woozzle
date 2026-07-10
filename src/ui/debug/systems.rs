@@ -17,6 +17,9 @@ pub fn show_debug_ui(
             builder.spawn(ContainerNode::new("Mouse Position:"));
             builder.spawn(ItemText::new(MouseWorldPosTextLabel));
             builder.spawn(ItemText::new(MouseHexPosTextLabel));
+
+            builder.spawn(ContainerNode::new("Camera:"));
+            builder.spawn(ItemText::new(MouseWorldPosTextLabel));
         });
     debug_ui_state.is_enabled = true;
 }

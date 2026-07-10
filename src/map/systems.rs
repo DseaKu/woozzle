@@ -17,7 +17,7 @@ pub fn set_tile(
     mouse_pos: Res<input::resources::MousePos>,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    map_data.tiles.insert(hex, TerrainType::Grass);
+    map_data.set_tile(hex, TerrainType::Grass);
 }
 
 pub fn from_hex_to_world(hex: Hex) -> Vec2 {
@@ -32,14 +32,11 @@ pub fn from_hex_to_world(hex: Hex) -> Vec2 {
 }
 
 pub fn from_world_to_hex(pixel: Vec2) -> Hex {
-    // Normalize coordinates
     let px = pixel.x / HEX_WIDTH;
     let py = pixel.y / HEX_HEIGHT;
 
-    // Calculate r
     let r_float = py * TWO_THIRDS;
 
-    //  Calculate q reusing r
     let q_float = (px * SQRT_3_OVER_3) - (r_float * 0.5);
 
     hex_round(q_float, r_float)
