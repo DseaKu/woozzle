@@ -3,38 +3,31 @@ use super::events;
 use super::resources;
 use crate::input;
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
 
 pub fn show_debug_ui(
     _trigger: On<events::ShowDebugUi>,
     mut commands: Commands,
     mut debug_ui_state: ResMut<resources::DebugUiState>,
-    mouse_text: Res<resources::MouseText>,
 ) {
     use components::*;
-
     commands
         .spawn(RootNodeBundle::new())
         .with_children(|builder| {
             builder.spawn(ContainerNode::new("Mouse"));
-            builder.spawn(ItemText::new(&mouse_text.world_pos, MouseWorldPosTextLabel));
+            builder.spawn(ItemText::new(MouseWorldPosTextLabel));
         });
     debug_ui_state.is_enabled = true;
 }
 
-pub fn update_mouse_txt(
-    mut mouse_text: ResMut<resources::MouseText>,
+pub fn update_mouse_world_pos_text(
     debug_ui_state: Res<resources::DebugUiState>,
-    window: Single<&Window, With<PrimaryWindow>>,
+    mut text: Single<&mut Text, With<components::MouseWorldPosTextLabel>>,
+    mouse_pos: Res<input::resources::MousePos>,
 ) {
-    if !debug_ui_state.is_enabled {
-        return;
+    if debug_ui_state.is_enabled {
+        let pos = mouse_pos.world;
+        **text = format!("World x={:.2}, y={:.2}", pos.x, pos.y).into();
     }
-    mouse_text.world_pos = if let Some(coords) = window.cursor_position() {
-        format!("x={}", coords.x)
-    } else {
-        "x=NaN".to_string()
-    };
 }
 
 pub fn hide_debug_ui(

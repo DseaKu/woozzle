@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 mod camera;
 mod input;
+mod map;
 mod ui;
 
 fn main() {

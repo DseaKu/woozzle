@@ -56,9 +56,9 @@ pub struct ItemText<L: Component> {
     label: L,
 }
 impl<L: Component> ItemText<L> {
-    pub fn new(text: &str, label: L) -> Self {
+    pub fn new(label: L) -> Self {
         Self {
-            text: Text::new(text),
+            text: Text::default(),
             node: Node {
                 flex_direction: FlexDirection::Column,
                 margin: UiRect::left(Val::Px(INDENTED_MARGIN)),

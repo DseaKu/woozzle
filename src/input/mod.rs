@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 pub mod events;
-mod resources;
+pub mod resources;
 mod system;
 
 pub struct InputPlugin;
