@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-mod resources;
+pub mod resources;
 mod systems;
 
 pub struct CameraPlugin;

@@ -5,6 +5,7 @@ use strum_macros::EnumCount;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, EnumCount)]
 pub enum TerrainType {
+    Empty,
     Grass,
     Water,
     Dirt,
@@ -13,9 +14,10 @@ impl TerrainType {
     pub fn to_atlas_index(&self) -> usize {
         use TerrainType::*;
         match self {
-            Grass => 0,
-            Water => 1,
-            Dirt => 2,
+            Empty => 0,
+            Grass => 1,
+            Water => 2,
+            Dirt => 3,
         }
     }
     pub fn n_of_types() -> usize {

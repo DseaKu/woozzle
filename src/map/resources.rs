@@ -10,3 +10,8 @@ impl MapData {
         self.tiles.insert(hex, terrain_type);
     }
 }
+
+#[derive(Resource, Default)]
+pub struct VisibleTiles {
+    pub tiles: Vec<Hex>,
+}

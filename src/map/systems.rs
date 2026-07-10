@@ -1,5 +1,6 @@
 use super::components::{Hex, TerrainType};
 use super::resources;
+use crate::camera;
 use crate::input;
 use bevy::prelude::*;
 
@@ -10,6 +11,23 @@ const SQRT_3_OVER_3: f32 = 0.577_350_26;
 const SQRT_3: f32 = 1.732_050_8;
 const TWO_THIRDS: f32 = 2.0 / 3.0;
 const THREE_HALVES: f32 = 3.0 / 2.0;
+
+pub fn update_visible_tiles(
+    mut visible_tiles: ResMut<resources::VisibleTiles>,
+    player_view: Res<camera::resources::PlayerView>,
+) {
+    if !player_view.is_changed() {
+        return;
+    }
+    let min_hex = Hex::from_world(player_view.top_left);
+    let max_hex = Hex::from_world(player_view.bottom_right);
+
+    for q in (min_hex.q - 1)..=(max_hex.q + 1) {
+        for r in (min_hex.r - 1)..=(max_hex.q + 1) {
+            visible_tiles.tiles.push(Hex::new(q, r));
+        }
+    }
+}
 
 pub fn set_tile(
     _trigger: On<input::events::SetTileEvent>,
