@@ -6,14 +6,6 @@ use crate::input;
 use crate::map::components::Hex;
 use bevy::prelude::*;
 
-macro_rules! guard_debug_update {
-    ($ui_state:expr, $resource:expr) => {
-        if !$ui_state.is_enabled || !$resource.is_changed() {
-            return;
-        }
-    };
-}
-
 pub fn show_debug_ui(
     _trigger: On<events::ShowDebugUi>,
     mut commands: Commands,
@@ -38,8 +30,12 @@ pub fn update_camera_center_text(
     mut text: Single<&mut Text, With<components::CameraCenterLabel>>,
     player_view: Res<PlayerView>,
 ) {
-    guard_debug_update!(debug_ui_state, player_view);
-    **text = format!("Center: {}", player_view.center).into();
+    crate::guard_update!(debug_ui_state.is_changed() || player_view.is_changed());
+    **text = format!(
+        "Top Left= {}, Center: {}",
+        player_view.top_left, player_view.center
+    )
+    .into();
 }
 
 pub fn update_mouse_world_pos_text(
@@ -47,7 +43,7 @@ pub fn update_mouse_world_pos_text(
     mut text: Single<&mut Text, With<components::MouseHexPosTextLabel>>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
-    guard_debug_update!(debug_ui_state, mouse_pos);
+    crate::guard_update!(debug_ui_state.is_enabled || mouse_pos.is_changed());
     let pos = Hex::from_world(mouse_pos.world);
     **text = format!("Hex q={}, r={}", pos.q, pos.r).into();
 }
@@ -57,7 +53,7 @@ pub fn update_mouse_hex_pos_text(
     mut text: Single<&mut Text, With<components::MouseWorldPosTextLabel>>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
-    guard_debug_update!(debug_ui_state, mouse_pos);
+    crate::guard_update!(debug_ui_state.is_enabled || mouse_pos.is_changed());
     let pos = mouse_pos.world;
     **text = format!("World x={:.2}, y={:.2}", pos.x, pos.y).into();
 }

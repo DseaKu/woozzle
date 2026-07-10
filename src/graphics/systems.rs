@@ -30,10 +30,10 @@ pub fn spawn_visible_tiles(
                         },
                     ),
                     Transform::from_xyz(hex.to_world().x, hex.to_world().y, 0.0),
-                    *hex,
+                    // *hex,
                 ))
                 .id();
-            
+
             spawned_tiles.tiles.insert(*hex, *terrain_type);
         }
     }
@@ -46,8 +46,8 @@ pub fn load_tileset_assets(
 ) {
     let layout = TextureAtlasLayout::from_grid(
         UVec2::new(32, 32),
-        1,
         map::components::TerrainType::n_of_types() as u32,
+        1,
         None,
         None,
     );

@@ -3,6 +3,7 @@ use bevy::prelude::*;
 mod camera;
 mod graphics;
 mod input;
+mod macros;
 mod map;
 mod ui;
 

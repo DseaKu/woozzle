@@ -2,8 +2,16 @@ use super::resources;
 use bevy::prelude::*;
 const PADDING: f32 = 100.0;
 
+const ZOOM: f32 = 20.0;
+
 pub fn spawn_camera(mut commands: Commands) {
-    commands.spawn(Camera2d);
+    commands.spawn((
+        Camera2d,
+        Projection::Orthographic(OrthographicProjection {
+            scale: 1. / ZOOM,
+            ..OrthographicProjection::default_2d()
+        }),
+    ));
 }
 
 pub fn update_player_view(

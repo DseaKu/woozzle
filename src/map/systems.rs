@@ -22,8 +22,9 @@ pub fn update_visible_tiles(
     let min_hex = Hex::from_world(player_view.top_left);
     let max_hex = Hex::from_world(player_view.bottom_right);
 
+    visible_tiles.tiles.clear();
     for q in (min_hex.q - 1)..=(max_hex.q + 1) {
-        for r in (min_hex.r - 1)..=(max_hex.q + 1) {
+        for r in (min_hex.r - 1)..=(max_hex.r + 1) {
             visible_tiles.tiles.push(Hex::new(q, r));
         }
     }
