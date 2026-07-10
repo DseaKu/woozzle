@@ -9,7 +9,7 @@ pub fn trigger_debug_ui_toggle(keyboard_input: Res<ButtonInput<KeyCode>>, mut co
     }
 }
 
-pub fn update_mouse(
+pub fn update_mouse_world_pos(
     mut mouse_pos: ResMut<resources::MousePos>,
     window: Single<&Window, With<window::PrimaryWindow>>,
     camera_q: Single<(&Camera, &GlobalTransform)>,

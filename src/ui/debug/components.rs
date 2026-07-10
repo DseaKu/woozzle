@@ -10,6 +10,9 @@ pub struct RootNodeLabel;
 #[derive(Component)]
 pub struct MouseWorldPosTextLabel;
 
+#[derive(Component)]
+pub struct MouseHexPosTextLabel;
+
 #[derive(Bundle)]
 pub struct RootNodeBundle {
     node: Node,

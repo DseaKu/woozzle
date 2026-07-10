@@ -12,6 +12,7 @@ impl Plugin for DebugUiPlugin {
             .add_observer(systems::show_debug_ui)
             .add_observer(systems::hide_debug_ui)
             .add_systems(Update, systems::update_mouse_world_pos_text)
+            .add_systems(Update, systems::update_mouse_hex_pos_text)
             .init_resource::<resources::DebugUiState>();
     }
 }

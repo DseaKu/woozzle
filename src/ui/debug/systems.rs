@@ -2,6 +2,7 @@ use super::components;
 use super::events;
 use super::resources;
 use crate::input;
+use crate::map::components::Hex;
 use bevy::prelude::*;
 
 pub fn show_debug_ui(
@@ -13,13 +14,25 @@ pub fn show_debug_ui(
     commands
         .spawn(RootNodeBundle::new())
         .with_children(|builder| {
-            builder.spawn(ContainerNode::new("Mouse"));
+            builder.spawn(ContainerNode::new("Mouse Position:"));
             builder.spawn(ItemText::new(MouseWorldPosTextLabel));
+            builder.spawn(ItemText::new(MouseHexPosTextLabel));
         });
     debug_ui_state.is_enabled = true;
 }
 
 pub fn update_mouse_world_pos_text(
+    debug_ui_state: Res<resources::DebugUiState>,
+    mut text: Single<&mut Text, With<components::MouseHexPosTextLabel>>,
+    mouse_pos: Res<input::resources::MousePos>,
+) {
+    if debug_ui_state.is_enabled {
+        let pos = Hex::from_world(mouse_pos.world);
+        **text = format!("Hex q={}, r={}", pos.q, pos.r).into();
+    }
+}
+
+pub fn update_mouse_hex_pos_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::MouseWorldPosTextLabel>>,
     mouse_pos: Res<input::resources::MousePos>,

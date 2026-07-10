@@ -11,5 +11,6 @@ fn main() {
         .add_plugins(ui::UiPlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(camera::CameraPlugin)
+        .add_plugins(map::MapPlugin)
         .run();
 }
