@@ -38,25 +38,25 @@ impl Hex {
         //  Calculate q reusing r
         let q_float = (px * SQRT_3_OVER_3) - (r_float * 0.5);
 
-        hex_round(q_float, r_float)
+        Self::hex_round(q_float, r_float)
     }
-}
-fn hex_round(frac_q: f32, frac_r: f32) -> Hex {
-    let frac_s = -frac_q - frac_r;
+    fn hex_round(frac_q: f32, frac_r: f32) -> Hex {
+        let frac_s = -frac_q - frac_r;
 
-    let mut q = frac_q.round();
-    let mut r = frac_r.round();
-    let s = frac_s.round();
+        let mut q = frac_q.round();
+        let mut r = frac_r.round();
+        let s = frac_s.round();
 
-    let q_diff = (q - frac_q).abs();
-    let r_diff = (r - frac_r).abs();
-    let s_diff = (s - frac_s).abs();
+        let q_diff = (q - frac_q).abs();
+        let r_diff = (r - frac_r).abs();
+        let s_diff = (s - frac_s).abs();
 
-    if q_diff > r_diff && q_diff > s_diff {
-        q = -r - s;
-    } else if r_diff > s_diff {
-        r = -q - s;
+        if q_diff > r_diff && q_diff > s_diff {
+            q = -r - s;
+        } else if r_diff > s_diff {
+            r = -q - s;
+        }
+
+        Hex::new(q as i32, r as i32)
     }
-
-    Hex::new(q as i32, r as i32)
 }

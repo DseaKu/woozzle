@@ -21,3 +21,9 @@ pub fn update_mouse_world_pos(
         }
     }
 }
+
+pub fn poll_mouse_left(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
+    if mouse_input.just_pressed(MouseButton::Left) {
+        commands.trigger(events::SetTileEvent);
+    }
+}
