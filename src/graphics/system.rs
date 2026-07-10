@@ -1,4 +1,5 @@
 use super::resources::TilesetAsset;
+use crate::map::components::TerrainType;
 use bevy::prelude::*;
 
 const PATH_PREFIX: &str = "/assets/";
@@ -11,7 +12,13 @@ pub fn load_tileset_assets(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    let layout = TextureAtlasLayout::from_grid(UVec2::new(32, 32), 1, 1, None, None);
+    let layout = TextureAtlasLayout::from_grid(
+        UVec2::new(32, 32),
+        1,
+        TerrainType::n_of_types() as u32,
+        None,
+        None,
+    );
     commands.insert_resource(TilesetAsset {
         image: asset_server.load::<Image>(TILESET_PATH),
         layout: texture_atlas_layouts.add(layout),
