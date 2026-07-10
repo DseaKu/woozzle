@@ -30,9 +30,11 @@ pub fn spawn_visible_tiles(
                         },
                     ),
                     Transform::from_xyz(hex.to_world().x, hex.to_world().y, 0.0),
-                    hex,
+                    *hex,
                 ))
                 .id();
+            
+            spawned_tiles.tiles.insert(*hex, *terrain_type);
         }
     }
 }
