@@ -4,7 +4,6 @@ use bevy::prelude::*;
 const ZOOM: f32 = 3.0;
 const INVERSE_ZOOM: f32 = 1.0 / ZOOM;
 const CULLING_BUFFER: f32 = 100.0;
-const CAMERA_SCALE: f32 = INVERSE_ZOOM + CULLING_BUFFER;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn((
@@ -27,8 +26,8 @@ pub fn update_player_view(
         return;
     };
 
-    let half_width = (viewport_size.x / 2.0) * CAMERA_SCALE;
-    let half_height = (viewport_size.y / 2.0) * CAMERA_SCALE;
+    let half_width = (viewport_size.x / 2.0) * INVERSE_ZOOM + CULLING_BUFFER;
+    let half_height = (viewport_size.y / 2.0) * INVERSE_ZOOM + CULLING_BUFFER;
 
     let new_top_left = new_center - Vec2::new(half_width, half_height);
     let new_bottom_right = new_center + Vec2::new(half_width, half_height);

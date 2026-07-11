@@ -27,7 +27,7 @@ fn main() {
     .add_plugins(diagnostic::DiagnosticPlugin);
 
     // Third-Party Plugins
-    if true {
+    if false {
         app.add_plugins(EguiPlugin::default())
             .add_plugins(WorldInspectorPlugin::new());
     }
