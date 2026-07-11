@@ -10,6 +10,7 @@ impl Plugin for InputPlugin {
         app.init_resource::<resources::MousePos>()
             .add_systems(Update, systems::trigger_debug_ui_toggle)
             .add_systems(Update, systems::poll_mouse_left)
+            .add_systems(Update, systems::poll_mouse_right)
             .add_systems(Update, systems::update_mouse_world_pos);
     }
 }

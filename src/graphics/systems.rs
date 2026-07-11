@@ -14,7 +14,7 @@ pub fn despawn_invisble_tiles(
 ) {
     crate::guard_update!(visible_tiles.is_changed() || map_data.is_changed());
     spawned_tiles.tiles.retain(|hex, entity| {
-        if visible_tiles.tiles.contains(hex) {
+        if visible_tiles.tiles.contains(hex) && map_data.tiles.contains_key(hex) {
             true // Keep the tile
         } else {
             commands.entity(*entity).despawn();
