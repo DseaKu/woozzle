@@ -7,8 +7,14 @@ use bevy::{
 pub struct DiagnosticPlugin;
 impl Plugin for DiagnosticPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, update_fps).init_resource::<Fps>();
+        app.add_systems(Update, update_fps)
+            .add_systems(Startup, print_window_mode)
+            .init_resource::<Fps>();
     }
+}
+
+fn print_window_mode(window: Single<&Window, With<bevy::window::PrimaryWindow>>) {
+    println!("=== BEVY WINDOW PRESENT MODE IS: {:?} ===", window.present_mode);
 }
 
 #[derive(Resource, Default)]

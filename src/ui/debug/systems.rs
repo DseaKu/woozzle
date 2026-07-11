@@ -56,7 +56,7 @@ pub fn update_camera_center_text(
 ) {
     crate::guard_update!(debug_ui_state.is_changed() || player_view.is_changed());
     **text = format!(
-        "Top Left= {}, Center: {}",
+        "Top Left={:.0}, Center={:.0}",
         player_view.top_left, player_view.center
     )
     .into();

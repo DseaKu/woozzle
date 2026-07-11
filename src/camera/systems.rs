@@ -40,10 +40,3 @@ pub fn update_player_view(
         center: new_center,
     };
 }
-
-// let mut visible_tiles = Vec::new();
-// for q in (top_left_hex.q - 1)..=(bottom_right_hex.q + 1) {
-//     for r in (top_left_hex.r - 1)..=(bottom_right_hex.r + 1) {
-//         visible_tiles.push(Hex::new(q, r));
-//     }
-// }
