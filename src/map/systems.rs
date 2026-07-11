@@ -16,9 +16,8 @@ pub fn update_visible_tiles(
     mut visible_tiles: ResMut<resources::VisibleTiles>,
     player_view: Res<camera::resources::PlayerView>,
 ) {
-    if !player_view.is_changed() {
-        return;
-    }
+    crate::guard_update!(player_view.is_changed());
+
     let min_hex = Hex::from_world(player_view.top_left);
     let max_hex = Hex::from_world(player_view.bot_right);
 

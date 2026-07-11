@@ -13,6 +13,8 @@ pub fn spawn_visible_tiles(
     mut commands: Commands,
     tile_assets: Res<resources::TilesetAsset>,
 ) {
+    crate::guard_update!(visible_tiles.is_changed() || map_data.is_changed());
+
     for hex in &visible_tiles.tiles {
         if let Some(terrain_type) = map_data.tiles.get(hex) {
             // Skip already spawned tiles
