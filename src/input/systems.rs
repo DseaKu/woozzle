@@ -29,3 +29,9 @@ pub fn poll_mouse_left(mut commands: Commands, mouse_input: Res<ButtonInput<Mous
         commands.trigger(events::SetTileEvent);
     }
 }
+
+pub fn poll_mouse_right(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
+    if mouse_input.just_pressed(MouseButton::Right) {
+        commands.trigger(events::RemoveTileEvent);
+    }
+}

@@ -1,11 +1,27 @@
 use super::resources;
-
 use crate::map;
 use bevy::prelude::*;
 
 const PATH_PREFIX: &str = "/assets/";
 const TILESET_PATH: &str = "images/tileset16.png";
 const TILE_SIZE: u32 = 16;
+
+pub fn despawn_invisble_tiles(
+    visible_tiles: Res<map::resources::VisibleTiles>,
+    map_data: Res<map::resources::MapData>,
+    mut spawned_tiles: ResMut<resources::SpawnedTileTexutures>,
+    mut commands: Commands,
+) {
+    crate::guard_update!(visible_tiles.is_changed() || map_data.is_changed());
+    spawned_tiles.tiles.retain(|hex, entity| {
+        if visible_tiles.tiles.contains(hex) {
+            true // Keep the tile
+        } else {
+            commands.entity(*entity).despawn();
+            false // Remove the tile
+        }
+    });
+}
 
 pub fn spawn_visible_tiles(
     visible_tiles: Res<map::resources::VisibleTiles>,
@@ -23,7 +39,7 @@ pub fn spawn_visible_tiles(
                 continue;
             }
 
-            let _entity_id = commands
+            let entity = commands
                 .spawn((
                     Sprite::from_atlas_image(
                         tile_assets.image.clone(),
@@ -33,11 +49,10 @@ pub fn spawn_visible_tiles(
                         },
                     ),
                     Transform::from_xyz(hex.to_world().x, hex.to_world().y, 0.0),
-                    // *hex,
                 ))
                 .id();
 
-            spawned_tiles.tiles.insert(*hex, *terrain_type);
+            spawned_tiles.tiles.insert(*hex, entity);
         }
     }
 }

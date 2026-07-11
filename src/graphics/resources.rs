@@ -10,5 +10,5 @@ pub struct TilesetAsset {
 
 #[derive(Resource, Default)]
 pub struct SpawnedTileTexutures {
-    pub tiles: HashMap<Hex, TerrainType>,
+    pub tiles: HashMap<Hex, Entity>,
 }

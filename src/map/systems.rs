@@ -29,6 +29,14 @@ pub fn update_visible_tiles(
         }
     }
 }
+pub fn remove_tiles(
+    _trigger: On<input::events::SetTileEvent>,
+    mut map_data: ResMut<resources::MapData>,
+    mouse_pos: Res<input::resources::MousePos>,
+) {
+    let hex = Hex::from_world(mouse_pos.world);
+    map_data.remove_tile(hex);
+}
 
 pub fn set_tile(
     _trigger: On<input::events::SetTileEvent>,
