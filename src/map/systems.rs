@@ -30,7 +30,7 @@ pub fn update_visible_tiles(
     }
 }
 pub fn remove_tiles(
-    _trigger: On<input::events::SetTileEvent>,
+    _trigger: On<input::events::RemoveTileEvent>,
     mut map_data: ResMut<resources::MapData>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
