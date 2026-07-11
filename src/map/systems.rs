@@ -4,7 +4,7 @@ use crate::camera;
 use crate::input;
 use bevy::prelude::*;
 
-const HEX_WIDTH: f32 = 9.5;
+const HEX_WIDTH: f32 = 9.3;
 const HEX_HEIGHT: f32 = 8.0;
 
 const SQRT_3_OVER_3: f32 = 0.577_350_26;
