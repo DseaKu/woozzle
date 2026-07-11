@@ -4,6 +4,7 @@ use crate::camera;
 use crate::input;
 use bevy::prelude::*;
 
+// 16 bit assets
 const HEX_WIDTH: f32 = 9.25;
 const HEX_HEIGHT: f32 = 8.0;
 
