@@ -9,7 +9,11 @@ mod ui;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(
+            DefaultPlugins
+                // Only for pixel art, otherwise texture will look blurred
+                .set(ImagePlugin::default_nearest()),
+        )
         .add_plugins(ui::UiPlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(camera::CameraPlugin)
