@@ -4,8 +4,8 @@ use crate::camera;
 use crate::input;
 use bevy::prelude::*;
 
-const HEX_WIDTH: f32 = 16.125;
-const HEX_HEIGHT: f32 = 15.25;
+const HEX_WIDTH: f32 = 9.5;
+const HEX_HEIGHT: f32 = 8.0;
 
 const SQRT_3_OVER_3: f32 = 0.577_350_26;
 const SQRT_3: f32 = 1.732_050_8;
@@ -35,7 +35,7 @@ pub fn set_tile(
     mouse_pos: Res<input::resources::MousePos>,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    map_data.set_tile(hex, TerrainType::Grass);
+    map_data.set_tile(hex, TerrainType::Water);
 }
 
 pub fn from_hex_to_world(hex: Hex) -> Vec2 {
@@ -46,7 +46,7 @@ pub fn from_hex_to_world(hex: Hex) -> Vec2 {
 
     let y = HEX_HEIGHT * THREE_HALVES * r;
 
-    Vec2::new(x, y)
+    Vec2::new(x.round(), y.round())
 }
 
 pub fn from_world_to_hex(pixel: Vec2) -> Hex {

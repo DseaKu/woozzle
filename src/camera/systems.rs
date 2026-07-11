@@ -1,7 +1,7 @@
 use super::resources;
 use bevy::prelude::*;
 
-const ZOOM: f32 = 3.0;
+const ZOOM: f32 = 10.0;
 const INVERSE_ZOOM: f32 = 1.0 / ZOOM;
 const CULLING_BUFFER: f32 = 100.0;
 

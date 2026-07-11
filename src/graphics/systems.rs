@@ -4,7 +4,8 @@ use crate::map;
 use bevy::prelude::*;
 
 const PATH_PREFIX: &str = "/assets/";
-const TILESET_PATH: &str = "images/tileset.png";
+const TILESET_PATH: &str = "images/tileset16.png";
+const TILE_SIZE: u32 = 16;
 
 pub fn spawn_visible_tiles(
     visible_tiles: Res<map::resources::VisibleTiles>,
@@ -47,7 +48,7 @@ pub fn load_tileset_assets(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     let layout = TextureAtlasLayout::from_grid(
-        UVec2::new(32, 32),
+        UVec2::new(TILE_SIZE, TILE_SIZE),
         map::components::TerrainType::n_of_types() as u32,
         1,
         None,
