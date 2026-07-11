@@ -16,8 +16,10 @@ pub fn update_mouse_world_pos(
 ) {
     if let Some(cursor_pos) = window.cursor_position() {
         let (camera, camera_transform) = *camera_q;
-        if let Ok(world_pos) = camera.viewport_to_world_2d(camera_transform, cursor_pos) {
-            mouse_pos.world = world_pos;
+        if let Ok(new_world_pos) = camera.viewport_to_world_2d(camera_transform, cursor_pos) {
+            crate::guard_update!(mouse_pos.world != new_world_pos);
+
+            mouse_pos.world = new_world_pos;
         }
     }
 }

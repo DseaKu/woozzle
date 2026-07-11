@@ -20,7 +20,7 @@ pub fn update_visible_tiles(
         return;
     }
     let min_hex = Hex::from_world(player_view.top_left);
-    let max_hex = Hex::from_world(player_view.bottom_right);
+    let max_hex = Hex::from_world(player_view.bot_right);
 
     visible_tiles.tiles.clear();
     for q in (min_hex.q - 1)..=(max_hex.q + 1) {
