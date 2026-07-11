@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-mod debug;
+pub mod debug;
 
 pub struct UiPlugin;
 impl Plugin for UiPlugin {

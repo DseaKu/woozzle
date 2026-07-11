@@ -20,7 +20,7 @@ pub fn spawn_visible_tiles(
                 continue;
             }
 
-            let entity_id = commands
+            let _entity_id = commands
                 .spawn((
                     Sprite::from_atlas_image(
                         tile_assets.image.clone(),

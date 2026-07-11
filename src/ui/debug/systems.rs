@@ -2,6 +2,7 @@ use super::components;
 use super::events;
 use super::resources;
 use crate::camera::resources::PlayerView;
+use crate::diagnostic;
 use crate::input;
 use crate::map::components::Hex;
 use bevy::prelude::*;
@@ -15,6 +16,9 @@ pub fn show_debug_ui(
     commands
         .spawn(RootNodeBundle::new())
         .with_children(|builder| {
+            builder.spawn(ContainerNode::new("System:"));
+            builder.spawn(ItemText::new(FpsLabel));
+
             builder.spawn(ContainerNode::new("Mouse Position:"));
             builder.spawn(ItemText::new(MouseWorldPosTextLabel));
             builder.spawn(ItemText::new(MouseHexPosTextLabel));
@@ -23,6 +27,26 @@ pub fn show_debug_ui(
             builder.spawn(ItemText::new(CameraCenterLabel));
         });
     debug_ui_state.is_enabled = true;
+}
+// pub fn update_XXX_text(
+//     debug_ui_state: Res<resources::DebugUiState>,
+//     mut text: Single<&mut Text, With<components::XXXLabel>>,
+// ) {
+//     crate::guard_update!(debug_ui_state.is_enabled);
+// **text = format!(
+//     "Top Left= {}, Center: {}",
+//     player_view.top_left, player_view.center
+// )
+// .into();
+// }
+
+pub fn update_fps_text(
+    debug_ui_state: Res<resources::DebugUiState>,
+    mut text: Single<&mut Text, With<components::FpsLabel>>,
+    fps: Res<diagnostic::Fps>,
+) {
+    crate::guard_update!(debug_ui_state.is_enabled);
+    **text = format!("Fps= {:.0}", fps.value).into();
 }
 
 pub fn update_camera_center_text(

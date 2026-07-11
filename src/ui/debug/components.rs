@@ -8,6 +8,9 @@ const INDENTED_MARGIN: f32 = 30.0;
 pub struct RootNodeLabel;
 
 #[derive(Component)]
+pub struct FpsLabel;
+
+#[derive(Component)]
 pub struct MouseWorldPosTextLabel;
 
 #[derive(Component)]
