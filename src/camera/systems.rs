@@ -1,8 +1,10 @@
 use super::resources;
 use bevy::prelude::*;
-const PADDING: f32 = 100.0;
 
-const ZOOM: f32 = 20.0;
+const ZOOM: f32 = 10.0;
+const INVERSE_ZOOM: f32 = 1.0 / ZOOM;
+const CULLING_BUFFER: f32 = 100.0;
+const CAMERA_SCALE: f32 = INVERSE_ZOOM + CULLING_BUFFER;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn((
@@ -16,16 +18,16 @@ pub fn spawn_camera(mut commands: Commands) {
 
 pub fn update_player_view(
     mut player_view: ResMut<resources::PlayerView>,
-    camera: Single<&Camera>,
-    camera_transform: Single<&GlobalTransform>,
+    camera_query: Single<(&Camera, &GlobalTransform)>,
 ) {
+    let (camera, camera_transform) = *camera_query;
     let Some(viewport_size) = camera.logical_viewport_size() else {
         return;
     };
     let center = camera_transform.translation().truncate();
 
-    let half_width = (viewport_size.x / 2.0) + PADDING;
-    let half_height = (viewport_size.y / 2.0) + PADDING;
+    let half_width = (viewport_size.x / 2.0) * CAMERA_SCALE;
+    let half_height = (viewport_size.y / 2.0) * CAMERA_SCALE;
 
     *player_view = resources::PlayerView {
         top_left: center - Vec2::new(half_width, half_height),
