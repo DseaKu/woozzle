@@ -2,7 +2,7 @@ use super::resources;
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
 const ZOOM: f32 = 10.0;
-const CULLING_BUFFER: f32 = 100.0;
+const CULLING_BUFFER: f32 = 200.0;
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;
