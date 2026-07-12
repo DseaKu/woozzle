@@ -17,3 +17,17 @@ impl Plugin for GraphicsPlugin {
             .init_resource::<resources::TileSpriteEntities>();
     }
 }
+
+pub enum DrawOrder {
+    Ground,
+    OnGround,
+}
+
+impl DrawOrder {
+    pub fn as_f32(&self) -> f32 {
+        match self {
+            DrawOrder::Ground => 0.0,
+            DrawOrder::OnGround => 1.0,
+        }
+    }
+}

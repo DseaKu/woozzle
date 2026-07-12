@@ -22,7 +22,11 @@ impl TileSprite {
                     index: terrain_type.to_atlas_index(),
                 },
             ),
-            transform: Transform::from_xyz(hex.to_world().x, hex.to_world().y, 0.0),
+            transform: Transform::from_xyz(
+                hex.to_world().x,
+                hex.to_world().y,
+                graphics::DrawOrder::Ground.as_f32(),
+            ),
         }
     }
 }
