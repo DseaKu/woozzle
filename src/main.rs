@@ -8,8 +8,8 @@ mod input;
 mod macros;
 mod map;
 mod ui;
+mod woozzle;
 
-const IS_PIXEL_ART_SETTINGS: bool = true;
 const IS_VSYNC_ENABLED: bool = true;
 const IS_INSPECTOR_ENABLED: bool = false;
 
@@ -29,23 +29,20 @@ fn main() {
         ..default()
     };
 
-    if IS_PIXEL_ART_SETTINGS {
-        app.add_plugins(
-            DefaultPlugins
-                .set(window_plugin)
-                .set(ImagePlugin::default_nearest()),
-        );
-    } else {
-        app.add_plugins(DefaultPlugins.set(window_plugin));
-    }
-    app.add_plugins(FrameTimeDiagnosticsPlugin::default())
-        // Own Plugins
-        .add_plugins(ui::UiPlugin)
-        .add_plugins(input::InputPlugin)
-        .add_plugins(camera::CameraPlugin)
-        .add_plugins(map::MapPlugin)
-        .add_plugins(graphics::GraphicsPlugin)
-        .add_plugins(diagnostic::DiagnosticPlugin);
+    app.add_plugins(
+        DefaultPlugins
+            .set(window_plugin)
+            .set(ImagePlugin::default_nearest()),
+    )
+    .add_plugins(FrameTimeDiagnosticsPlugin::default())
+    // Own Plugins
+    .add_plugins(ui::UiPlugin)
+    .add_plugins(input::InputPlugin)
+    .add_plugins(camera::CameraPlugin)
+    .add_plugins(map::MapPlugin)
+    .add_plugins(graphics::GraphicsPlugin)
+    .add_plugins(woozzle::WoozzlePlugin)
+    .add_plugins(diagnostic::DiagnosticPlugin);
 
     // Third-Party Plugins
     if IS_INSPECTOR_ENABLED {

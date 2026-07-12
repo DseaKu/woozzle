@@ -8,9 +8,10 @@ pub struct InputPlugin;
 impl Plugin for InputPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<resources::MousePos>()
-            .add_systems(Update, systems::trigger_debug_ui_toggle)
-            .add_systems(Update, systems::poll_mouse_left)
-            .add_systems(Update, systems::poll_mouse_right)
+            .add_systems(Update, systems::send_toggle_debug_ui_event)
+            .add_systems(Update, systems::send_set_tile_event)
+            .add_systems(Update, systems::send_remove_tile_event)
+            .add_systems(Update, systems::send_spawn_woozle_event)
             .add_systems(Update, systems::update_mouse_world_pos);
     }
 }

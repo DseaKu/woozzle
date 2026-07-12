@@ -3,7 +3,10 @@ use super::resources;
 use bevy::prelude::*;
 use bevy::window;
 
-pub fn trigger_debug_ui_toggle(keyboard_input: Res<ButtonInput<KeyCode>>, mut commands: Commands) {
+pub fn send_toggle_debug_ui_event(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut commands: Commands,
+) {
     if keyboard_input.just_pressed(KeyCode::Tab) {
         commands.trigger(events::ToggleDebugUiEvent);
     }
@@ -24,14 +27,20 @@ pub fn update_mouse_world_pos(
     }
 }
 
-pub fn poll_mouse_left(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
+pub fn send_set_tile_event(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
     if mouse_input.just_pressed(MouseButton::Left) {
         commands.trigger(events::SetTileEvent);
     }
 }
 
-pub fn poll_mouse_right(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
+pub fn send_remove_tile_event(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
     if mouse_input.just_pressed(MouseButton::Right) {
         commands.trigger(events::RemoveTileEvent);
+    }
+}
+
+pub fn send_spawn_woozle_event(mut commands: Commands, keyboard_input: Res<ButtonInput<KeyCode>>) {
+    if keyboard_input.just_pressed(KeyCode::KeyE) {
+        commands.trigger(events::SpawnWoozleEvent);
     }
 }
