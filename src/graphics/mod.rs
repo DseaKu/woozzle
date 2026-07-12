@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+mod bundles;
 mod components;
 mod resources;
 mod systems;
@@ -11,6 +12,6 @@ impl Plugin for GraphicsPlugin {
             .add_systems(Update, systems::despawn_invisble_tiles)
             .add_systems(Update, systems::spawn_visible_tiles)
             .init_resource::<resources::TilesetAsset>()
-            .init_resource::<resources::SpawnedTileTexutures>();
+            .init_resource::<resources::TileSpriteEntities>();
     }
 }

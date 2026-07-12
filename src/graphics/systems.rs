@@ -1,3 +1,4 @@
+use super::bundles;
 use super::resources;
 use crate::map;
 use bevy::prelude::*;
@@ -7,14 +8,14 @@ const TILESET_PATH: &str = "images/tileset16.png";
 const TILE_SIZE: u32 = 16;
 
 pub fn despawn_invisble_tiles(
-    visible_tiles: Res<map::resources::VisibleTiles>,
+    viewport_hexes: Res<map::resources::ViewportHexes>,
     map_data: Res<map::resources::MapData>,
-    mut spawned_tiles: ResMut<resources::SpawnedTileTexutures>,
+    mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
     mut commands: Commands,
 ) {
-    crate::guard_update!(visible_tiles.is_changed() || map_data.is_changed());
-    spawned_tiles.tiles.retain(|hex, entity| {
-        if visible_tiles.tiles.contains(hex) && map_data.tiles.contains_key(hex) {
+    crate::guard_update!(viewport_hexes.is_changed() || map_data.is_changed());
+    tile_sprite_entities.entities.retain(|hex, entity| {
+        if viewport_hexes.tiles.contains(hex) && map_data.tiles.contains_key(hex) {
             true // Keep the tile
         } else {
             commands.entity(*entity).despawn();
@@ -24,35 +25,33 @@ pub fn despawn_invisble_tiles(
 }
 
 pub fn spawn_visible_tiles(
-    visible_tiles: Res<map::resources::VisibleTiles>,
+    viewport_hexes: Res<map::resources::ViewportHexes>,
     map_data: Res<map::resources::MapData>,
-    mut spawned_tiles: ResMut<resources::SpawnedTileTexutures>,
+    mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
     mut commands: Commands,
     tile_assets: Res<resources::TilesetAsset>,
 ) {
-    crate::guard_update!(visible_tiles.is_changed() || map_data.is_changed());
+    crate::guard_update!(viewport_hexes.is_changed() || map_data.is_changed());
 
-    for hex in &visible_tiles.tiles {
+    for hex in &viewport_hexes.tiles {
         if let Some(terrain_type) = map_data.tiles.get(hex) {
             // Skip already spawned tiles
-            if spawned_tiles.tiles.contains_key(hex) {
+            if tile_sprite_entities.entities.contains_key(hex) {
                 continue;
             }
 
-            let entity = commands
-                .spawn((
-                    Sprite::from_atlas_image(
-                        tile_assets.image.clone(),
-                        TextureAtlas {
-                            layout: tile_assets.layout.clone(),
-                            index: terrain_type.to_atlas_index(),
-                        },
-                    ),
-                    Transform::from_xyz(hex.to_world().x, hex.to_world().y, 0.0),
+            let tile_entity = commands
+                .spawn(bundles::TileSprite::new(
+                    *hex,
+                    tile_assets.image.clone(),
+                    TextureAtlas {
+                        layout: tile_assets.layout.clone(),
+                        index: terrain_type.to_atlas_index(),
+                    },
                 ))
                 .id();
 
-            spawned_tiles.tiles.insert(*hex, entity);
+            tile_sprite_entities.entities.insert(*hex, tile_entity);
         }
     }
 }

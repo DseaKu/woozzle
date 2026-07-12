@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::woozzle::systems::spawn_woozle;
 
-mod bundle;
+mod bundles;
 mod components;
 mod resources;
 mod systems;

@@ -13,8 +13,8 @@ const SQRT_3: f32 = 1.732_050_8;
 const TWO_THIRDS: f32 = 2.0 / 3.0;
 const THREE_HALVES: f32 = 3.0 / 2.0;
 
-pub fn update_visible_tiles(
-    mut visible_tiles: ResMut<resources::VisibleTiles>,
+pub fn update_viewport_hexes(
+    mut viewport_hexes: ResMut<resources::ViewportHexes>,
     player_view: Res<camera::resources::PlayerView>,
 ) {
     crate::guard_update!(player_view.is_changed());
@@ -22,10 +22,10 @@ pub fn update_visible_tiles(
     let min_hex = Hex::from_world(player_view.top_left);
     let max_hex = Hex::from_world(player_view.bot_right);
 
-    visible_tiles.tiles.clear();
+    viewport_hexes.tiles.clear();
     for q in (min_hex.q - 1)..=(max_hex.q + 1) {
         for r in (min_hex.r - 1)..=(max_hex.r + 1) {
-            visible_tiles.tiles.push(Hex::new(q, r));
+            viewport_hexes.tiles.push(Hex::new(q, r));
         }
     }
 }

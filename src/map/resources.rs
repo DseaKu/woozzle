@@ -14,7 +14,9 @@ impl MapData {
     }
 }
 
+/// A mathematical list of Hex coordinates that are currently within the camera's visible viewport.
+/// This resource only tracks abstract map logic and does not care about Bevy Entities or Sprites.
 #[derive(Resource, Default)]
-pub struct VisibleTiles {
+pub struct ViewportHexes {
     pub tiles: Vec<Hex>,
 }
