@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Bundle)]
 pub struct WoozzleSprite {
     sprite: Sprite,
 }
@@ -12,7 +12,7 @@ impl WoozzleSprite {
                 assets.image.clone(),
                 TextureAtlas {
                     layout: assets.layout.clone(),
-                    index: 1,
+                    index: 0,
                 },
             ),
         }

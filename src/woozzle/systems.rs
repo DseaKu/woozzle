@@ -22,6 +22,7 @@ pub fn update_visible_woozzles(
 ) {
     crate::guard_update!(viewport_hexes.is_changed() || woozzle_data.is_changed());
 
+    visible_woozzles.entities.clear();
     for hex in &viewport_hexes.tiles {
         if !woozzle_data.entities.contains_key(hex) {
             continue;
