@@ -39,16 +39,8 @@ pub fn spawn_visible_tiles(
             if tile_sprite_entities.entities.contains_key(hex) {
                 continue;
             }
-
             let tile_entity = commands
-                .spawn(bundles::TileSprite::new(
-                    *hex,
-                    tile_assets.image.clone(),
-                    TextureAtlas {
-                        layout: tile_assets.layout.clone(),
-                        index: terrain_type.to_atlas_index(),
-                    },
-                ))
+                .spawn(bundles::TileSprite::new(*hex, &tile_assets, *terrain_type))
                 .id();
 
             tile_sprite_entities.entities.insert(*hex, tile_entity);
