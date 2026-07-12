@@ -1,11 +1,26 @@
 use super::resources;
 use crate::map;
+use crate::woozzle;
 use bevy::prelude::*;
 
 const PATH_PREFIX: &str = "/assets/";
 const TILESET_PATH: &str = "images/tileset16.png";
 const WOOZZLE_PATH: &str = "images/woozzle.png";
 const TILE_SIZE: u32 = 16;
+
+pub fn insert_woozzle_sprite(
+    visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
+    mut commands: Commands,
+    woozzle_asset: Res<super::resources::WoozzleAsset>,
+) {
+    crate::guard_update!(visible_woozzles.is_changed());
+
+    for woozzle in &visible_woozzles.entities {
+        commands
+            .entity(*woozzle)
+            .insert(super::components::WoozzleSprite::new(&woozzle_asset));
+    }
+}
 
 pub fn despawn_tiles(
     viewport_hexes: Res<map::resources::ViewportHexes>,
@@ -14,6 +29,7 @@ pub fn despawn_tiles(
     mut commands: Commands,
 ) {
     crate::guard_update!(viewport_hexes.is_changed() || map_data.is_changed());
+
     tile_sprite_entities.entities.retain(|hex, entity| {
         if viewport_hexes.tiles.contains(hex) && map_data.tiles.contains_key(hex) {
             true // Keep the tile

@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 mod bundles;
 mod components;
-mod resources;
+pub mod resources;
 mod systems;
 
 pub struct WoozzlePlugin;

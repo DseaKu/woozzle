@@ -26,7 +26,7 @@ pub fn update_visible_woozzles(
         if !woozzle_data.entities.contains_key(hex) {
             continue;
         }
-        let (_key, woozzle_entity) = woozzle_data.entities.get_key_value(hex).unwrap();
+        let woozzle_entity = woozzle_data.entities.get(hex).unwrap();
         visible_woozzles.entities.push(*woozzle_entity);
     }
 }

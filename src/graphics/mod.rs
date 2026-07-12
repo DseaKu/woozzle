@@ -11,6 +11,7 @@ impl Plugin for GraphicsPlugin {
             .add_systems(Startup, systems::load_woozzle_assets)
             .add_systems(Update, systems::despawn_tiles)
             .add_systems(Update, systems::spawn_tiles)
+            .add_systems(Update, systems::insert_woozzle_sprite)
             .init_resource::<resources::WoozzleAsset>()
             .init_resource::<resources::TilesetAsset>()
             .init_resource::<resources::TileSpriteEntities>();
