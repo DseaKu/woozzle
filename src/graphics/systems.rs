@@ -1,4 +1,3 @@
-use super::bundles;
 use super::resources;
 use crate::map;
 use bevy::prelude::*;
@@ -40,7 +39,11 @@ pub fn spawn_visible_tiles(
                 continue;
             }
             let tile_entity = commands
-                .spawn(bundles::TileSprite::new(*hex, &tile_assets, *terrain_type))
+                .spawn(map::bundles::TileSprite::new(
+                    *hex,
+                    &tile_assets,
+                    *terrain_type,
+                ))
                 .id();
 
             tile_sprite_entities.entities.insert(*hex, tile_entity);

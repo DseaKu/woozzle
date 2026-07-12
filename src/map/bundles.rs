@@ -1,7 +1,7 @@
 use crate::map;
 use bevy::prelude::*;
 
-use super::resources;
+use crate::graphics;
 
 #[derive(Bundle)]
 pub struct TileSprite {
@@ -9,7 +9,11 @@ pub struct TileSprite {
     transform: Transform,
 }
 impl TileSprite {
-    pub fn new(hex: map::components::Hex, assets: &resources::TilesetAsset, terrain_type: map::components::TerrainType) -> Self {
+    pub fn new(
+        hex: map::components::Hex,
+        assets: &graphics::resources::TilesetAsset,
+        terrain_type: map::components::TerrainType,
+    ) -> Self {
         Self {
             sprite: Sprite::from_atlas_image(
                 assets.image.clone(),
