@@ -3,6 +3,7 @@
 - [x] set tilest(left mouse click)
 - [x] delete(right click) tiles
 - [ ] spawn woozzle at mouse coords triggered (key e)
+- [ ] keep track of spawned/visible tiles and woozzles
 - [ ] let woozzle move to a certain point
 - [ ] set path destination points (key q), woozzle need to visit all points in
       certain order

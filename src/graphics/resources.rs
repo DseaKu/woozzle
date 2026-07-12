@@ -8,6 +8,12 @@ pub struct TilesetAsset {
     pub layout: Handle<TextureAtlasLayout>,
 }
 
+#[derive(Resource, Default)]
+pub struct WoozzleAsset {
+    pub image: Handle<Image>,
+    pub layout: Handle<TextureAtlasLayout>,
+}
+
 /// A mapping of Hex coordinates to the actual Bevy Sprite Entities currently spawned in the world.
 /// Used by the graphics system to track which tiles are actively rendered on the screen.
 #[derive(Resource, Default)]

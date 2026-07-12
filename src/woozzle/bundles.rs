@@ -6,9 +6,9 @@ pub struct Woozzle {
 }
 
 impl Woozzle {
-    pub fn new() -> Self {
+    pub fn new(pos: Vec2) -> Self {
         Self {
-            transform: Transform::default(),
+            transform: Transform::from_xyz(pos.x, pos.y, 0.0),
         }
     }
 }

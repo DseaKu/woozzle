@@ -4,9 +4,10 @@ use bevy::prelude::*;
 
 const PATH_PREFIX: &str = "/assets/";
 const TILESET_PATH: &str = "images/tileset16.png";
+const WOOZZLE_PATH: &str = "images/woozzle.png";
 const TILE_SIZE: u32 = 16;
 
-pub fn despawn_invisble_tiles(
+pub fn despawn_tiles(
     viewport_hexes: Res<map::resources::ViewportHexes>,
     map_data: Res<map::resources::MapData>,
     mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
@@ -23,7 +24,7 @@ pub fn despawn_invisble_tiles(
     });
 }
 
-pub fn spawn_visible_tiles(
+pub fn spawn_tiles(
     viewport_hexes: Res<map::resources::ViewportHexes>,
     map_data: Res<map::resources::MapData>,
     mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
@@ -49,6 +50,21 @@ pub fn spawn_visible_tiles(
             tile_sprite_entities.entities.insert(*hex, tile_entity);
         }
     }
+}
+pub fn load_woozzle_assets(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+) {
+    let layout = TextureAtlasLayout::from_grid(UVec2::new(TILE_SIZE, TILE_SIZE), 1, 1, None, None);
+    commands.insert_resource(resources::WoozzleAsset {
+        image: asset_server.load::<Image>(WOOZZLE_PATH),
+        layout: texture_atlas_layouts.add(layout),
+    });
+    println!(
+        "Loading Woozzle asset, from: {}{}",
+        PATH_PREFIX, WOOZZLE_PATH
+    );
 }
 
 pub fn load_tileset_assets(
