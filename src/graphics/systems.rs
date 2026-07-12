@@ -14,11 +14,29 @@ pub fn insert_woozzle_sprite(
     woozzle_asset: Res<super::resources::WoozzleAsset>,
 ) {
     crate::guard_update!(visible_woozzles.is_changed());
+    use super::components::*;
 
     for woozzle in &visible_woozzles.entities {
         commands
             .entity(*woozzle)
-            .insert(super::components::WoozzleSprite::new(&woozzle_asset));
+            .insert((WoozzleSprite::new(&woozzle_asset), VisibleWoozzleLabel));
+    }
+}
+pub fn remove_woozzle_sprite(
+    visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
+    mut commands: Commands,
+    woozzle_query: Query<Entity, With<super::components::VisibleWoozzleLabel>>,
+) {
+    crate::guard_update!(visible_woozzles.is_changed());
+    use super::components::*;
+
+    for actual_visible_woozzle in woozzle_query {
+        if visible_woozzles.entities.contains(&actual_visible_woozzle) {
+            continue;
+        }
+        commands
+            .entity(actual_visible_woozzle)
+            .remove::<(WoozzleSprite, VisibleWoozzleLabel)>();
     }
 }
 

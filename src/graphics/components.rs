@@ -18,3 +18,6 @@ impl WoozzleSprite {
         }
     }
 }
+
+#[derive(Component)]
+pub struct VisibleWoozzleLabel;

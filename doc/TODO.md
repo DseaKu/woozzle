@@ -2,7 +2,8 @@
 - [x] point 2 hex conversion, add debug ui mouse coords world/hex
 - [x] set tilest(left mouse click)
 - [x] delete(right click) tiles
-- [ ] spawn woozzle at mouse coords triggered (key e)
+- [x] spawn woozzle at mouse coords triggered (key e)
+- [ ] rework spawn system of tiles like woozzle
 - [ ] keep track of spawned/visible tiles and woozzles
 - [ ] let woozzle move to a certain point
 - [ ] set path destination points (key q), woozzle need to visit all points in
