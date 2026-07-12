@@ -5,7 +5,8 @@ const ZOOM: f32 = 10.0;
 const CULLING_BUFFER: f32 = 200.0;
 const CAMERA_SPEED: f32 = 200.0;
 
-const ZOOM_SPEED: f32 = 0.05;
+const ZOOM_SPEED: f32 = 0.025;
+const ZOOM_STEP_SIZE: f32 = 0.0625;
 const MIN_SCALE: f32 = 0.05;
 const MAX_SCALE: f32 = 0.25;
 
@@ -43,14 +44,11 @@ pub fn zoom_camera(
         return;
     };
 
-    // In your zoom_camera system
     for event in mouse_wheel_events.read() {
         let zoom_delta = event.y * ZOOM_SPEED;
         ortho.scale -= zoom_delta;
 
-        // Snap to the nearest clean multiple (e.g., increments of 0.125 or 0.25)
-        let step = 0.125;
-        ortho.scale = (ortho.scale / step).round() * step;
+        ortho.scale = (ortho.scale / ZOOM_STEP_SIZE).round() * ZOOM_STEP_SIZE;
 
         ortho.scale = ortho.scale.clamp(MIN_SCALE, MAX_SCALE);
     }
@@ -78,7 +76,6 @@ pub fn update_player_view(
         return;
     };
 
-    // Extract the dynamic scale from the projection
     let current_scale = if let Projection::Orthographic(ortho) = projection {
         ortho.scale
     } else {

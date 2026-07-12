@@ -1,6 +1,6 @@
 use bevy::{platform::collections::HashMap, prelude::*};
 
-use crate::map::components::{Hex, TerrainType};
+use crate::map;
 
 #[derive(Resource, Default)]
 pub struct TilesetAsset {
@@ -10,5 +10,5 @@ pub struct TilesetAsset {
 
 #[derive(Resource, Default)]
 pub struct SpawnedTileTexutures {
-    pub tiles: HashMap<Hex, Entity>,
+    pub tiles: HashMap<map::components::Hex, Entity>,
 }

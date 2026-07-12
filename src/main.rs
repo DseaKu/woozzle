@@ -10,7 +10,7 @@ mod map;
 mod ui;
 
 const IS_PIXEL_ART_SETTINGS: bool = true;
-const IS_VSYNC_ENABLED: bool = false;
+const IS_VSYNC_ENABLED: bool = true;
 const IS_INSPECTOR_ENABLED: bool = false;
 
 fn main() {

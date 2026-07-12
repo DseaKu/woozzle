@@ -5,19 +5,19 @@ use strum_macros::EnumCount;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, EnumCount)]
 pub enum TerrainType {
-    Empty,
-    Grass,
+    _Empty,
+    _Grass,
     Water,
-    Dirt,
+    _Dirt,
 }
 impl TerrainType {
-    pub fn to_atlas_index(&self) -> usize {
+    pub fn to_atlas_index(self) -> usize {
         use TerrainType::*;
         match self {
-            Empty => 0,
-            Grass => 1,
+            _Empty => 0,
+            _Grass => 1,
             Water => 2,
-            Dirt => 3,
+            _Dirt => 3,
         }
     }
     pub fn n_of_types() -> usize {
@@ -34,8 +34,8 @@ impl Hex {
     pub fn new(q: i32, r: i32) -> Self {
         Self { q, r }
     }
-    pub fn to_world(&self) -> Vec2 {
-        systems::from_hex_to_world(*self)
+    pub fn to_world(self) -> Vec2 {
+        systems::from_hex_to_world(self)
     }
     pub fn from_world(pixel: Vec2) -> Hex {
         systems::from_world_to_hex(pixel)
