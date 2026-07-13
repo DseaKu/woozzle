@@ -3,8 +3,7 @@ use crate::map;
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
 const ZOOM: f32 = 10.0;
-const CULLING_BUFFER: f32 = -600.0;
-// const CULLING_BUFFER: f32 = -50.0;
+const CULLING_FACTOR: f32 = -0.80; // 10% of screen size
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;
@@ -85,8 +84,8 @@ pub fn update_player_view(
         return;
     };
 
-    let half_width = (viewport_size.x / 2.0 + CULLING_BUFFER) * current_scale;
-    let half_height = (viewport_size.y / 2.0 + CULLING_BUFFER) * current_scale;
+    let half_width = (viewport_size.x / 2.0) * (1.0 + CULLING_FACTOR) * current_scale;
+    let half_height = (viewport_size.y / 2.0) * (1.0 + CULLING_FACTOR) * current_scale;
 
     let new_top_left = new_center - Vec2::new(half_width, half_height);
     let new_bottom_right = new_center + Vec2::new(half_width, half_height);
