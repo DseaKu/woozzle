@@ -13,7 +13,7 @@ impl Plugin for WoozzlePlugin {
         app.init_resource::<resources::WoozlesData>()
             .init_resource::<resources::VisibleWoozzle>()
             .add_observer(systems::update_visible_woozzles::<events::WoozzleDataUpdated>)
-            .add_observer(systems::update_visible_woozzles::<camera::events::PlayerViewUpdated>)
+            .add_observer(systems::update_visible_woozzles::<camera::events::VisibleHexesUpdated>)
             .add_observer(systems::set_woozle);
     }
 }
