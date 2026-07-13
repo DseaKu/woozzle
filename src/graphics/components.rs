@@ -1,3 +1,4 @@
+use crate::map;
 use bevy::prelude::*;
 
 #[derive(Bundle)]
@@ -19,5 +20,29 @@ impl WoozzleSprite {
     }
 }
 
+#[derive(Bundle)]
+pub struct TileSprite {
+    sprite: Sprite,
+}
+impl TileSprite {
+    pub fn new(
+        assets: &super::resources::TilesetAsset,
+        terrain_type: map::components::TerrainType,
+    ) -> Self {
+        Self {
+            sprite: Sprite::from_atlas_image(
+                assets.image.clone(),
+                TextureAtlas {
+                    layout: assets.layout.clone(),
+                    index: terrain_type.to_atlas_index(),
+                },
+            ),
+        }
+    }
+}
+
 #[derive(Component)]
 pub struct VisibleWoozzleLabel;
+
+#[derive(Component)]
+pub struct VisibleTileLabel;

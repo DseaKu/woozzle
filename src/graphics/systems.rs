@@ -14,7 +14,7 @@ pub fn insert_woozzle_sprite(
     mut commands: Commands,
     woozzle_asset: Res<super::resources::WoozzleAsset>,
 ) {
-    use super::components::*;
+    use super::components::{VisibleWoozzleLabel, WoozzleSprite};
 
     for woozzle in &visible_woozzles.entities {
         commands
@@ -28,7 +28,7 @@ pub fn remove_woozzle_sprite(
     mut commands: Commands,
     woozzle_query: Query<Entity, With<super::components::VisibleWoozzleLabel>>,
 ) {
-    use super::components::*;
+    use super::components::{VisibleWoozzleLabel, WoozzleSprite};
 
     for actual_visible_woozzle in woozzle_query {
         if visible_woozzles.entities.contains(&actual_visible_woozzle) {
@@ -40,49 +40,35 @@ pub fn remove_woozzle_sprite(
     }
 }
 
-pub fn despawn_tiles(
-    viewport_hexes: Res<map::resources::VisibleHexes>,
-    map_data: Res<map::resources::TileData>,
-    mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
+pub fn remove_tile_sprite(
+    _trigger: On<map::events::VisibleTilesUpdated>,
+    visible_tiles: Res<map::resources::VisibleTiles>,
     mut commands: Commands,
+    tile_query: Query<Entity, With<super::components::VisibleTileLabel>>,
 ) {
-    crate::guard_update!(viewport_hexes.is_changed() || map_data.is_changed());
-
-    tile_sprite_entities.entities.retain(|hex, entity| {
-        if viewport_hexes.tiles.contains(hex) && map_data.tiles.contains_key(hex) {
-            true // Keep the tile
-        } else {
-            commands.entity(*entity).despawn();
-            false // Remove the tile
+    use super::components::{TileSprite, VisibleTileLabel};
+    for actual_visible_tiles in tile_query {
+        if visible_tiles.entities.contains(&actual_visible_tiles) {
+            continue;
         }
-    });
+        commands
+            .entity(actual_visible_tiles)
+            .remove::<(TileSprite, VisibleTileLabel)>();
+    }
 }
 
-pub fn spawn_tiles(
-    viewport_hexes: Res<map::resources::VisibleHexes>,
-    map_data: Res<map::resources::TileData>,
-    mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
+pub fn insert_tile_sprite(
+    _trigger: On<map::events::VisibleTilesUpdated>,
+    visible_tiles: Res<map::resources::VisibleTiles>,
     mut commands: Commands,
     tile_assets: Res<resources::TilesetAsset>,
 ) {
-    crate::guard_update!(viewport_hexes.is_changed() || map_data.is_changed());
-
-    for hex in &viewport_hexes.tiles {
-        if let Some(terrain_type) = map_data.tiles.get(hex) {
-            // Skip already spawned tiles
-            if tile_sprite_entities.entities.contains_key(hex) {
-                continue;
-            }
-            let tile_entity = commands
-                .spawn(map::bundles::TileSprite::new(
-                    *hex,
-                    &tile_assets,
-                    *terrain_type,
-                ))
-                .id();
-
-            tile_sprite_entities.entities.insert(*hex, tile_entity);
-        }
+    use super::components::{TileSprite, VisibleTileLabel};
+    for tile in &visible_tiles.entities {
+        commands.entity(*tile).insert((
+            TileSprite::new(&tile_assets, map::components::TerrainType::Water),
+            VisibleTileLabel,
+        ));
     }
 }
 pub fn load_woozzle_assets(

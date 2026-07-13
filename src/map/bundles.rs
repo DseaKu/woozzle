@@ -1,32 +1,22 @@
-use crate::map;
+use super::components::{Hex, TerrainType};
 use bevy::prelude::*;
 
 use crate::graphics;
 
 #[derive(Bundle)]
-pub struct TileSprite {
-    sprite: Sprite,
+pub struct HexTile {
+    tile_type: TerrainType,
     transform: Transform,
 }
-impl TileSprite {
-    pub fn new(
-        hex: map::components::Hex,
-        assets: &graphics::resources::TilesetAsset,
-        terrain_type: map::components::TerrainType,
-    ) -> Self {
+impl HexTile {
+    pub fn new(hex: Hex, tile_type: TerrainType) -> Self {
         Self {
-            sprite: Sprite::from_atlas_image(
-                assets.image.clone(),
-                TextureAtlas {
-                    layout: assets.layout.clone(),
-                    index: terrain_type.to_atlas_index(),
-                },
-            ),
             transform: Transform::from_xyz(
                 hex.to_world().x,
                 hex.to_world().y,
                 graphics::DrawOrder::Ground.as_f32(),
             ),
+            tile_type,
         }
     }
 }

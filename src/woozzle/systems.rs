@@ -1,4 +1,4 @@
-use crate::{input, map};
+use crate::{camera, input, map};
 use bevy::prelude::*;
 
 pub fn set_woozle(
@@ -24,7 +24,7 @@ pub fn set_woozle(
 
 pub fn update_visible_woozzles<E: Event>(
     _trigger: On<E>,
-    visible_hexes: Res<map::resources::VisibleHexes>,
+    visible_hexes: Res<camera::resources::VisibleHexes>,
     mut visible_woozzles: ResMut<super::resources::VisibleWoozzle>,
     woozzle_data: Res<super::resources::WoozlesData>,
     mut commands: Commands,

@@ -8,6 +8,8 @@ pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<resources::PlayerView>()
+            .add_observer(systems::update_viewport_hexes)
+            .init_resource::<resources::VisibleHexes>()
             .add_systems(Update, systems::update_player_view)
             .add_systems(Update, systems::move_camera)
             .add_systems(Update, systems::zoom_camera)

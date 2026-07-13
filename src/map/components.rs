@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use strum::EnumCount;
 use strum_macros::EnumCount;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, EnumCount)]
+#[derive(Component, Debug, Clone, Copy, PartialEq, Eq, EnumCount)]
 pub enum TerrainType {
     _Empty,
     _Grass,

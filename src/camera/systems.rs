@@ -1,4 +1,5 @@
 use super::resources;
+use crate::map;
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
 const ZOOM: f32 = 10.0;
@@ -99,4 +100,21 @@ pub fn update_player_view(
         bot_right: new_bottom_right,
         center: new_center,
     };
+}
+
+pub fn update_viewport_hexes(
+    _trigger: On<super::events::PlayerViewUpdated>,
+    mut visible_hexes: ResMut<super::resources::VisibleHexes>,
+    player_view: Res<super::resources::PlayerView>,
+) {
+    use map::components::Hex;
+    let min_hex = Hex::from_world(player_view.top_left);
+    let max_hex = Hex::from_world(player_view.bot_right);
+
+    visible_hexes.tiles.clear();
+    for q in (min_hex.q - 1)..=(max_hex.q + 1) {
+        for r in (min_hex.r - 1)..=(max_hex.r + 1) {
+            visible_hexes.tiles.push(Hex::new(q, r));
+        }
+    }
 }

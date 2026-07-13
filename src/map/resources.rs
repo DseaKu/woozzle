@@ -1,12 +1,12 @@
-use super::components::{Hex, TerrainType};
+use super::components::Hex;
 use bevy::{platform::collections::HashMap, prelude::*};
 
 #[derive(Resource, Default)]
 pub struct TileData {
-    pub tiles: HashMap<Hex, TerrainType>,
+    pub entities: HashMap<Hex, Entity>,
 }
 
 #[derive(Resource, Default)]
-pub struct VisibleHexes {
-    pub tiles: Vec<Hex>,
+pub struct VisibleTiles {
+    pub entities: Vec<Entity>,
 }
