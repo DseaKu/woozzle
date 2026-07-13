@@ -1,11 +1,7 @@
-use super::components;
-use super::events;
-use super::resources;
-use crate::camera::resources::PlayerView;
-use crate::diagnostic;
-use crate::input;
-use crate::map::components::Hex;
+use crate::{camera, diagnostic, input, map};
 use bevy::prelude::*;
+
+use super::{components, events, resources};
 
 pub fn show_debug_ui(
     _trigger: On<events::ShowDebugUi>,
@@ -25,6 +21,9 @@ pub fn show_debug_ui(
 
             builder.spawn(ContainerNode::new("Camera:"));
             builder.spawn(ItemText::new(CameraCenterLabel));
+
+            builder.spawn(ContainerNode::new("Entites:"));
+            builder.spawn(ItemText::new(TileEntityLabel));
         });
     debug_ui_state.is_enabled = true;
 }
@@ -40,6 +39,21 @@ pub fn show_debug_ui(
 // .into();
 // }
 
+pub fn update_tile_entity_text(
+    debug_ui_state: Res<resources::DebugUiState>,
+    mut text: Single<&mut Text, With<components::TileEntityLabel>>,
+    tile_data: Res<map::resources::TileData>,
+    visible_tiles: Res<map::resources::VisibleTiles>,
+) {
+    crate::guard_update!(debug_ui_state.is_enabled);
+    **text = format!(
+        "All={}, Visible={}",
+        tile_data.entities.len(),
+        visible_tiles.entities.len()
+    )
+    .into();
+}
+
 pub fn update_fps_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::FpsLabel>>,
@@ -52,7 +66,7 @@ pub fn update_fps_text(
 pub fn update_camera_center_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::CameraCenterLabel>>,
-    player_view: Res<PlayerView>,
+    player_view: Res<camera::resources::PlayerView>,
 ) {
     crate::guard_update!(debug_ui_state.is_changed() || player_view.is_changed());
     **text = format!(
@@ -68,7 +82,7 @@ pub fn update_mouse_world_pos_text(
     mouse_pos: Res<input::resources::MousePos>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled || mouse_pos.is_changed());
-    let pos = Hex::from_world(mouse_pos.world);
+    let pos = map::components::Hex::from_world(mouse_pos.world);
     **text = format!("Hex q={}, r={}", pos.q, pos.r).into();
 }
 

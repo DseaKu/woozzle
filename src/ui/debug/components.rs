@@ -19,6 +19,9 @@ pub struct MouseHexPosTextLabel;
 #[derive(Component)]
 pub struct CameraCenterLabel;
 
+#[derive(Component)]
+pub struct TileEntityLabel;
+
 #[derive(Bundle)]
 pub struct RootNodeBundle {
     node: Node,
