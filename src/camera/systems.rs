@@ -3,7 +3,7 @@ use crate::map;
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
 const ZOOM: f32 = 10.0;
-const CULLING_FACTOR: f32 = -0.80; // 10% of screen size
+const CULLING_FACTOR: f32 = -0.80;
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;

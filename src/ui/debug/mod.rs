@@ -24,6 +24,7 @@ impl Plugin for DebugUiPlugin {
             .add_systems(Update, systems::update_mouse_hex_pos_text)
             .add_systems(Update, systems::update_mouse_world_pos_text)
             .add_systems(Update, systems::update_camera_center_text)
+            .add_systems(Update, systems::update_woozzle_entity_text)
             .add_systems(Update, systems::update_tile_entity_text)
             .init_resource::<resources::DebugUiState>();
     }

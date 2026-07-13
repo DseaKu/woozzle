@@ -1,4 +1,4 @@
-use crate::{camera, diagnostic, input, map};
+use crate::{camera, diagnostic, input, map, woozzle};
 use bevy::prelude::*;
 
 use super::{components, events, resources};
@@ -24,6 +24,7 @@ pub fn show_debug_ui(
 
             builder.spawn(ContainerNode::new("Entites:"));
             builder.spawn(ItemText::new(TileEntityLabel));
+            builder.spawn(ItemText::new(WoozzleEntityLabel));
         });
     debug_ui_state.is_enabled = true;
 }
@@ -38,6 +39,20 @@ pub fn show_debug_ui(
 // )
 // .into();
 // }
+pub fn update_woozzle_entity_text(
+    debug_ui_state: Res<resources::DebugUiState>,
+    mut text: Single<&mut Text, With<components::WoozzleEntityLabel>>,
+    woozzle_data: Res<woozzle::resources::WoozlesData>,
+    visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
+) {
+    crate::guard_update!(debug_ui_state.is_enabled);
+    **text = format!(
+        "Woozles={}, Culled={}",
+        woozzle_data.entities.len(),
+        visible_woozzles.entities.len()
+    )
+    .into();
+}
 
 pub fn update_tile_entity_text(
     debug_ui_state: Res<resources::DebugUiState>,
@@ -47,7 +62,7 @@ pub fn update_tile_entity_text(
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
     **text = format!(
-        "All={}, Visible={}",
+        "Tiles={}, Culled={}",
         tile_data.entities.len(),
         visible_tiles.entities.len()
     )

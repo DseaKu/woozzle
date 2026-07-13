@@ -22,6 +22,9 @@ pub struct CameraCenterLabel;
 #[derive(Component)]
 pub struct TileEntityLabel;
 
+#[derive(Component)]
+pub struct WoozzleEntityLabel;
+
 #[derive(Bundle)]
 pub struct RootNodeBundle {
     node: Node,
