@@ -93,7 +93,7 @@ pub fn hide_debug_ui(
 }
 
 pub fn toggle_debug_ui(
-    _trigger: On<input::events::ToggleDebugUiEvent>,
+    _trigger: On<input::events::ToggleDebugUi>,
     mut commands: Commands,
     debug_ui_state: Res<resources::DebugUiState>,
 ) {

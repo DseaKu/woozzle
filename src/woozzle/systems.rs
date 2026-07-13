@@ -1,9 +1,8 @@
-use crate::input;
-use crate::map;
+use crate::{input, map};
 use bevy::prelude::*;
 
 pub fn set_woozle(
-    _trigger: On<input::events::SpawnWoozleEvent>,
+    _trigger: On<input::events::SpawnWoozle>,
     mut woozzle_data: ResMut<super::resources::WoozlesData>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
@@ -11,23 +10,32 @@ pub fn set_woozle(
     let woozzle_entity = commands
         .spawn(super::bundles::Woozzle::new(mouse_pos.world))
         .id();
+
     let hex = map::components::Hex::from_world(mouse_pos.world);
-    woozzle_data.entities.insert(hex, woozzle_entity);
+
+    woozzle_data
+        .entities
+        .entry(hex)
+        .or_default()
+        .push(woozzle_entity);
+
+    commands.trigger(super::events::WoozzleDataUpdated);
 }
 
-pub fn update_visible_woozzles(
-    viewport_hexes: Res<map::resources::ViewportHexes>,
+pub fn update_visible_woozzles<E: Event>(
+    _trigger: On<E>,
+    visible_hexes: Res<map::resources::VisibleHexes>,
     mut visible_woozzles: ResMut<super::resources::VisibleWoozzle>,
     woozzle_data: Res<super::resources::WoozlesData>,
+    mut commands: Commands,
 ) {
-    crate::guard_update!(viewport_hexes.is_changed() || woozzle_data.is_changed());
-
     visible_woozzles.entities.clear();
-    for hex in &viewport_hexes.tiles {
-        if !woozzle_data.entities.contains_key(hex) {
-            continue;
+    for hex in &visible_hexes.tiles {
+        if let Some(woozzles_in_hex) = woozzle_data.entities.get(hex) {
+            for &woozzle_entity in woozzles_in_hex {
+                visible_woozzles.entities.push(woozzle_entity);
+            }
         }
-        let woozzle_entity = woozzle_data.entities.get(hex).unwrap();
-        visible_woozzles.entities.push(*woozzle_entity);
     }
+    commands.trigger(super::events::VisibleWoozzleUpdated);
 }

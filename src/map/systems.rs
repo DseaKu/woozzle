@@ -1,10 +1,8 @@
 use super::components::{Hex, TerrainType};
-use super::resources;
-use crate::camera;
-use crate::input;
+use crate::{camera, input};
 use bevy::prelude::*;
 
-// 16 bit assets
+// 16 bit tile assets
 const HEX_WIDTH: f32 = 9.25;
 const HEX_HEIGHT: f32 = 8.0;
 
@@ -14,37 +12,36 @@ const TWO_THIRDS: f32 = 2.0 / 3.0;
 const THREE_HALVES: f32 = 3.0 / 2.0;
 
 pub fn update_viewport_hexes(
-    mut viewport_hexes: ResMut<resources::ViewportHexes>,
+    _trigger: On<camera::events::PlayerViewUpdated>,
+    mut visible_hexes: ResMut<super::resources::VisibleHexes>,
     player_view: Res<camera::resources::PlayerView>,
 ) {
-    crate::guard_update!(player_view.is_changed());
-
     let min_hex = Hex::from_world(player_view.top_left);
     let max_hex = Hex::from_world(player_view.bot_right);
 
-    viewport_hexes.tiles.clear();
+    visible_hexes.tiles.clear();
     for q in (min_hex.q - 1)..=(max_hex.q + 1) {
         for r in (min_hex.r - 1)..=(max_hex.r + 1) {
-            viewport_hexes.tiles.push(Hex::new(q, r));
+            visible_hexes.tiles.push(Hex::new(q, r));
         }
     }
 }
 pub fn remove_tiles(
-    _trigger: On<input::events::RemoveTileEvent>,
-    mut map_data: ResMut<resources::MapData>,
+    _trigger: On<input::events::RemoveTile>,
+    mut tile_data: ResMut<super::resources::TileData>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    map_data.remove_tile(hex);
+    tile_data.tiles.remove(&hex);
 }
 
 pub fn set_tile(
-    _trigger: On<input::events::SetTileEvent>,
-    mut map_data: ResMut<resources::MapData>,
+    _trigger: On<input::events::SetTile>,
+    mut tile_data: ResMut<super::resources::TileData>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    map_data.set_tile(hex, TerrainType::Water);
+    tile_data.tiles.insert(hex, TerrainType::Water);
 }
 
 pub fn from_hex_to_world(hex: Hex) -> Vec2 {

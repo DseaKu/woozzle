@@ -69,6 +69,7 @@ pub fn spawn_camera(mut commands: Commands) {
 pub fn update_player_view(
     mut player_view: ResMut<resources::PlayerView>,
     camera_query: Single<(&Camera, &GlobalTransform, &Projection)>,
+    mut commands: Commands,
 ) {
     let (camera, camera_transform, projection) = *camera_query;
     let new_center = camera_transform.translation().truncate();
@@ -90,6 +91,8 @@ pub fn update_player_view(
     let new_bottom_right = new_center + Vec2::new(half_width, half_height);
 
     crate::guard_update!(player_view.center != new_center || player_view.top_left != new_top_left);
+
+    commands.trigger(super::events::PlayerViewUpdated);
 
     *player_view = resources::PlayerView {
         top_left: new_top_left,

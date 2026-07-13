@@ -9,11 +9,11 @@ const WOOZZLE_PATH: &str = "images/woozzle.png";
 const TILE_SIZE: u32 = 16;
 
 pub fn insert_woozzle_sprite(
+    _trigger: On<woozzle::events::VisibleWoozzleUpdated>,
     visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
     mut commands: Commands,
     woozzle_asset: Res<super::resources::WoozzleAsset>,
 ) {
-    crate::guard_update!(visible_woozzles.is_changed());
     use super::components::*;
 
     for woozzle in &visible_woozzles.entities {
@@ -23,11 +23,11 @@ pub fn insert_woozzle_sprite(
     }
 }
 pub fn remove_woozzle_sprite(
+    _trigger: On<woozzle::events::VisibleWoozzleUpdated>,
     visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
     mut commands: Commands,
     woozzle_query: Query<Entity, With<super::components::VisibleWoozzleLabel>>,
 ) {
-    crate::guard_update!(visible_woozzles.is_changed());
     use super::components::*;
 
     for actual_visible_woozzle in woozzle_query {
@@ -41,8 +41,8 @@ pub fn remove_woozzle_sprite(
 }
 
 pub fn despawn_tiles(
-    viewport_hexes: Res<map::resources::ViewportHexes>,
-    map_data: Res<map::resources::MapData>,
+    viewport_hexes: Res<map::resources::VisibleHexes>,
+    map_data: Res<map::resources::TileData>,
     mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
     mut commands: Commands,
 ) {
@@ -59,8 +59,8 @@ pub fn despawn_tiles(
 }
 
 pub fn spawn_tiles(
-    viewport_hexes: Res<map::resources::ViewportHexes>,
-    map_data: Res<map::resources::MapData>,
+    viewport_hexes: Res<map::resources::VisibleHexes>,
+    map_data: Res<map::resources::TileData>,
     mut tile_sprite_entities: ResMut<resources::TileSpriteEntities>,
     mut commands: Commands,
     tile_assets: Res<resources::TilesetAsset>,

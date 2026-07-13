@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
 #[derive(Event)]
-pub struct ToggleDebugUiEvent;
+pub struct ToggleDebugUi;
 
 #[derive(Event)]
-pub struct SetTileEvent;
+pub struct SetTile;
 
 #[derive(Event)]
-pub struct RemoveTileEvent;
+pub struct RemoveTile;
 
 #[derive(Event)]
-pub struct SpawnWoozleEvent;
+pub struct SpawnWoozle;
