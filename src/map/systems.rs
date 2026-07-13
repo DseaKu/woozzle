@@ -32,9 +32,11 @@ pub fn remove_tiles(
     _trigger: On<input::events::RemoveTile>,
     mut tile_data: ResMut<super::resources::TileData>,
     mouse_pos: Res<input::resources::MousePos>,
+    mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
     tile_data.entities.remove(&hex);
+    commands.trigger(super::events::TileDataUpdated);
 }
 
 pub fn set_tile(
