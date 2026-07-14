@@ -1,6 +1,8 @@
 use super::resources;
 use crate::map;
 use bevy::{input::mouse::MouseWheel, prelude::*};
+use super::events::*;
+use super::resources::*;
 
 const ZOOM: f32 = 10.0;
 const CULLING_FACTOR: f32 = -0.80;
@@ -98,13 +100,13 @@ pub fn update_player_view(
         center: new_center,
     };
 
-    commands.trigger(super::events::PlayerViewUpdated);
+    commands.trigger(PlayerViewUpdated);
 }
 
 pub fn update_viewport_hexes(
-    _trigger: On<super::events::PlayerViewUpdated>,
-    mut visible_hexes: ResMut<super::resources::VisibleHexes>,
-    player_view: Res<super::resources::PlayerView>,
+    _trigger: On<PlayerViewUpdated>,
+    mut visible_hexes: ResMut<VisibleHexes>,
+    player_view: Res<PlayerView>,
     mut commands: Commands,
 ) {
     use map::components::Hex;
@@ -140,5 +142,5 @@ pub fn update_viewport_hexes(
             visible_hexes.tiles.push(Hex::new(q, r));
         }
     }
-    commands.trigger(super::events::VisibleHexesUpdated);
+    commands.trigger(VisibleHexesUpdated);
 }

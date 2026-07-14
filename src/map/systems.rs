@@ -2,6 +2,9 @@ use super::components::{Hex, TerrainType};
 use crate::camera;
 use crate::input;
 use bevy::prelude::*;
+use super::events::*;
+use super::bundles::*;
+use super::resources::*;
 
 // 16 bit tile assets
 const HEX_WIDTH: f32 = 9.25;
@@ -15,8 +18,8 @@ const THREE_HALVES: f32 = 3.0 / 2.0;
 pub fn update_visible_tiles<E: Event>(
     _trigger: On<E>,
     visible_hexes: Res<camera::resources::VisibleHexes>,
-    mut visible_tiles: ResMut<super::resources::VisibleTiles>,
-    tile_data: Res<super::resources::TileData>,
+    mut visible_tiles: ResMut<VisibleTiles>,
+    tile_data: Res<TileData>,
     mut commands: Commands,
 ) {
     visible_tiles.entities.clear();
@@ -25,33 +28,33 @@ pub fn update_visible_tiles<E: Event>(
             visible_tiles.entities.push(*visible_tile);
         }
     }
-    commands.trigger(super::events::VisibleTilesUpdated);
+    commands.trigger(VisibleTilesUpdated);
 }
 
 pub fn remove_tiles(
     _trigger: On<input::events::RemoveTile>,
-    mut tile_data: ResMut<super::resources::TileData>,
+    mut tile_data: ResMut<TileData>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
     tile_data.entities.remove(&hex);
-    commands.trigger(super::events::TileDataUpdated);
+    commands.trigger(TileDataUpdated);
 }
 
 pub fn set_tile(
     _trigger: On<input::events::SetTile>,
-    mut tile_data: ResMut<super::resources::TileData>,
+    mut tile_data: ResMut<TileData>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
     let tile_entity = commands
-        .spawn(super::bundles::HexTile::new(hex, TerrainType::Water))
+        .spawn(HexTile::new(hex, TerrainType::Water))
         .id();
 
     tile_data.entities.insert(hex, tile_entity);
-    commands.trigger(super::events::TileDataUpdated);
+    commands.trigger(TileDataUpdated);
 }
 
 pub fn from_hex_to_world(hex: Hex) -> Vec2 {

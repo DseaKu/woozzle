@@ -2,6 +2,8 @@ use super::resources;
 use crate::map;
 use crate::woozzle;
 use bevy::prelude::*;
+use super::resources::*;
+use super::components::*;
 
 const PATH_PREFIX: &str = "/assets/";
 const TILESET_PATH: &str = "images/tileset16.png";
@@ -12,7 +14,7 @@ pub fn insert_woozzle_sprite(
     _trigger: On<woozzle::events::VisibleWoozzleUpdated>,
     visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
     mut commands: Commands,
-    woozzle_asset: Res<super::resources::WoozzleAsset>,
+    woozzle_asset: Res<WoozzleAsset>,
 ) {
     use super::components::{VisibleWoozzleLabel, WoozzleSprite};
 
@@ -26,7 +28,7 @@ pub fn remove_woozzle_sprite(
     _trigger: On<woozzle::events::VisibleWoozzleUpdated>,
     visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
     mut commands: Commands,
-    woozzle_query: Query<Entity, With<super::components::VisibleWoozzleLabel>>,
+    woozzle_query: Query<Entity, With<VisibleWoozzleLabel>>,
 ) {
     use super::components::{VisibleWoozzleLabel, WoozzleSprite};
 
@@ -44,7 +46,7 @@ pub fn remove_tile_sprite(
     _trigger: On<map::events::VisibleTilesUpdated>,
     visible_tiles: Res<map::resources::VisibleTiles>,
     mut commands: Commands,
-    tile_query: Query<Entity, With<super::components::VisibleTileLabel>>,
+    tile_query: Query<Entity, With<VisibleTileLabel>>,
 ) {
     use super::components::{TileSprite, VisibleTileLabel};
     for actual_visible_tiles in tile_query {

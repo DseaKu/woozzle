@@ -1,13 +1,14 @@
 use bevy::prelude::*;
+use super::components::*;
 
 pub fn process_job(
-    mut woozzle_action_queues: Query<(Entity, &mut super::components::ActionQueue)>,
+    mut woozzle_action_queues: Query<(Entity, &mut ActionQueue)>,
     mut commands: Commands,
 ) {
     for (woozzle, action_queue) in &mut woozzle_action_queues {
         // Label jobless Woozzles, so that it can be filtered out easily afterwards
         if action_queue.0.is_empty() {
-            commands.entity(woozzle).insert(super::components::JobLess);
+            commands.entity(woozzle).insert(JobLess);
             continue;
         }
     }

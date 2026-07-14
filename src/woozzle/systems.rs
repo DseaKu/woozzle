@@ -1,8 +1,12 @@
 use crate::{camera, input, map};
 use bevy::prelude::*;
+use super::events::*;
+use super::bundles::*;
+use super::resources::*;
+use super::components::*;
 
 // pub fn get_a_job(
-//     mut state_query: Query<&mut jobs::components, With<super::components::NeedsTask>>,
+//     mut state_query: Query<&mut jobs::components, With<NeedsTask>>,
 // ) {
 //     for mut state in &mut state_query {
 //         // Fetch task
@@ -11,7 +15,7 @@ use bevy::prelude::*;
 
 pub fn set_woozle(
     _trigger: On<input::events::SpawnWoozle>,
-    mut woozzle_data: ResMut<super::resources::WoozlesData>,
+    mut woozzle_data: ResMut<WoozlesData>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
@@ -27,14 +31,14 @@ pub fn set_woozle(
         .or_default()
         .push(woozzle_entity);
 
-    commands.trigger(super::events::WoozzleDataUpdated);
+    commands.trigger(WoozzleDataUpdated);
 }
 
 pub fn update_visible_woozzles<E: Event>(
     _trigger: On<E>,
     visible_hexes: Res<camera::resources::VisibleHexes>,
-    mut visible_woozzles: ResMut<super::resources::VisibleWoozzle>,
-    woozzle_data: Res<super::resources::WoozlesData>,
+    mut visible_woozzles: ResMut<VisibleWoozzle>,
+    woozzle_data: Res<WoozlesData>,
     mut commands: Commands,
 ) {
     visible_woozzles.entities.clear();
@@ -45,5 +49,5 @@ pub fn update_visible_woozzles<E: Event>(
             }
         }
     }
-    commands.trigger(super::events::VisibleWoozzleUpdated);
+    commands.trigger(VisibleWoozzleUpdated);
 }
