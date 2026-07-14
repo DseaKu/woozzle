@@ -1,11 +1,12 @@
+use super::events::*;
 use super::resources;
+use super::resources::*;
 use crate::map;
 use bevy::{input::mouse::MouseWheel, prelude::*};
-use super::events::*;
-use super::resources::*;
 
 const ZOOM: f32 = 10.0;
-const CULLING_FACTOR: f32 = -0.80;
+// const CULLING_FACTOR: f32 = -0.80;
+const CULLING_FACTOR: f32 = 0.01;
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;
