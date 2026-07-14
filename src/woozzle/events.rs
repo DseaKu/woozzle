@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Event)]
-pub struct WoozzleDataUpdated;
+pub struct DataUpdated;
 
 #[derive(Event)]
-pub struct VisibleWoozzleUpdated;
+pub struct VisibleUpdated;

@@ -11,26 +11,26 @@ const WOOZZLE_PATH: &str = "images/woozzle.png";
 const TILE_SIZE: u32 = 16;
 
 pub fn insert_woozzle_sprite(
-    _trigger: On<woozzle::events::VisibleWoozzleUpdated>,
-    visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
+    _trigger: On<woozzle::events::VisibleUpdated>,
+    visible_woozzles: Res<woozzle::resources::Visible>,
     mut commands: Commands,
     woozzle_asset: Res<WoozzleAsset>,
 ) {
-    use super::components::{VisibleWoozzleLabel, WoozzleSprite};
+    use super::components::{VisibleLabel, WoozzleSprite};
 
     for woozzle in &visible_woozzles.entities {
         commands
             .entity(*woozzle)
-            .insert((WoozzleSprite::new(&woozzle_asset), VisibleWoozzleLabel));
+            .insert((WoozzleSprite::new(&woozzle_asset), VisibleLabel));
     }
 }
 pub fn remove_woozzle_sprite(
-    _trigger: On<woozzle::events::VisibleWoozzleUpdated>,
-    visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
+    _trigger: On<woozzle::events::VisibleUpdated>,
+    visible_woozzles: Res<woozzle::resources::Visible>,
     mut commands: Commands,
-    woozzle_query: Query<Entity, With<VisibleWoozzleLabel>>,
+    woozzle_query: Query<Entity, With<VisibleLabel>>,
 ) {
-    use super::components::{VisibleWoozzleLabel, WoozzleSprite};
+    use super::components::{VisibleLabel, WoozzleSprite};
 
     for actual_visible_woozzle in woozzle_query {
         if visible_woozzles.entities.contains(&actual_visible_woozzle) {
@@ -38,13 +38,13 @@ pub fn remove_woozzle_sprite(
         }
         commands
             .entity(actual_visible_woozzle)
-            .remove::<(WoozzleSprite, VisibleWoozzleLabel)>();
+            .remove::<(WoozzleSprite, VisibleLabel)>();
     }
 }
 
 pub fn remove_tile_sprite(
-    _trigger: On<map::events::VisibleTilesUpdated>,
-    visible_tiles: Res<map::resources::VisibleTiles>,
+    _trigger: On<map::events::VisibleUpdated>,
+    visible_tiles: Res<map::resources::Visible>,
     mut commands: Commands,
     tile_query: Query<Entity, With<VisibleTileLabel>>,
 ) {
@@ -60,8 +60,8 @@ pub fn remove_tile_sprite(
 }
 
 pub fn insert_tile_sprite(
-    _trigger: On<map::events::VisibleTilesUpdated>,
-    visible_tiles: Res<map::resources::VisibleTiles>,
+    _trigger: On<map::events::VisibleUpdated>,
+    visible_tiles: Res<map::resources::Visible>,
     mut commands: Commands,
     tile_assets: Res<resources::TilesetAsset>,
 ) {

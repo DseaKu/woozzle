@@ -18,8 +18,8 @@ const THREE_HALVES: f32 = 3.0 / 2.0;
 pub fn update_visible_tiles<E: Event>(
     _trigger: On<E>,
     visible_hexes: Res<camera::resources::VisibleHexes>,
-    mut visible_tiles: ResMut<VisibleTiles>,
-    tile_data: Res<TileData>,
+    mut visible_tiles: ResMut<Visible>,
+    tile_data: Res<Data>,
     mut commands: Commands,
 ) {
     visible_tiles.entities.clear();
@@ -28,23 +28,23 @@ pub fn update_visible_tiles<E: Event>(
             visible_tiles.entities.push(*visible_tile);
         }
     }
-    commands.trigger(VisibleTilesUpdated);
+    commands.trigger(VisibleUpdated);
 }
 
 pub fn remove_tiles(
     _trigger: On<input::events::RemoveTile>,
-    mut tile_data: ResMut<TileData>,
+    mut tile_data: ResMut<Data>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
     tile_data.entities.remove(&hex);
-    commands.trigger(TileDataUpdated);
+    commands.trigger(DataUpdated);
 }
 
 pub fn set_tile(
     _trigger: On<input::events::SetTile>,
-    mut tile_data: ResMut<TileData>,
+    mut tile_data: ResMut<Data>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
@@ -54,7 +54,7 @@ pub fn set_tile(
         .id();
 
     tile_data.entities.insert(hex, tile_entity);
-    commands.trigger(TileDataUpdated);
+    commands.trigger(DataUpdated);
 }
 
 pub fn from_hex_to_world(hex: Hex) -> Vec2 {

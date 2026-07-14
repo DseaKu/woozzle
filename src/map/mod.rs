@@ -14,8 +14,8 @@ impl Plugin for MapPlugin {
         app.add_observer(systems::set_tile)
             .add_observer(systems::remove_tiles)
             .add_observer(systems::update_visible_tiles::<camera::events::VisibleHexesUpdated>)
-            .add_observer(systems::update_visible_tiles::<events::TileDataUpdated>)
-            .init_resource::<resources::TileData>()
-            .init_resource::<resources::VisibleTiles>();
+            .add_observer(systems::update_visible_tiles::<events::DataUpdated>)
+            .init_resource::<resources::Data>()
+            .init_resource::<resources::Visible>();
     }
 }

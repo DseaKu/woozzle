@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Event)]
-pub struct VisibleTilesUpdated;
+pub struct VisibleUpdated;
 
 #[derive(Event)]
-pub struct TileDataUpdated;
+pub struct DataUpdated;

@@ -42,8 +42,8 @@ pub fn show_debug_ui(
 pub fn update_woozzle_entity_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::WoozzleEntityLabel>>,
-    woozzle_data: Res<woozzle::resources::WoozlesData>,
-    visible_woozzles: Res<woozzle::resources::VisibleWoozzle>,
+    woozzle_data: Res<woozzle::resources::Data>,
+    visible_woozzles: Res<woozzle::resources::Visible>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
     **text = format!(
@@ -57,8 +57,8 @@ pub fn update_woozzle_entity_text(
 pub fn update_tile_entity_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::TileEntityLabel>>,
-    tile_data: Res<map::resources::TileData>,
-    visible_tiles: Res<map::resources::VisibleTiles>,
+    tile_data: Res<map::resources::Data>,
+    visible_tiles: Res<map::resources::Visible>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
     **text = format!(
