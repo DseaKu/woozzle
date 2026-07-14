@@ -1,17 +1,18 @@
+use super::events::*;
+use super::resources::*;
+use crate::jobs::components::{Action, ActionQueue, JobLess};
 use crate::{camera, input, map};
 use bevy::prelude::*;
-use super::events::*;
-use super::bundles::*;
-use super::resources::*;
-use super::components::*;
 
-// pub fn get_a_job(
-//     mut state_query: Query<&mut jobs::components, With<NeedsTask>>,
-// ) {
-//     for mut state in &mut state_query {
-//         // Fetch task
-//     }
-// }
+pub fn get_a_job(query: Query<(Entity, &mut ActionQueue), With<JobLess>>, mut commands: Commands) {
+    for (woozzle, mut empty_queue) in query {
+        empty_queue
+            .0
+            .push_back(Action::GoToPoint(Vec2 { x: 30.0, y: -30.0 }));
+
+        commands.entity(woozzle).remove::<JobLess>();
+    }
+}
 
 pub fn set_woozle(
     _trigger: On<input::events::SpawnWoozle>,

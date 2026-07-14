@@ -1,12 +1,17 @@
 use bevy::prelude::*;
 use std::collections::VecDeque;
 
-use crate::map::components::Hex;
+#[derive(Component)]
+pub struct GoToPoint(pub Vec2);
 
+#[derive(Component)]
+pub struct _Wait(pub f32);
+
+#[derive(Clone)]
 pub enum Action {
-    GoToHex(Hex),
+    // GoToHex(Hex),
     GoToPoint(Vec2),
-    Wait(f32),
+    _Wait(f32),
 }
 
 #[derive(Component, Default)]
@@ -17,3 +22,6 @@ pub struct CurrentAction(pub Action);
 
 #[derive(Component)]
 pub struct JobLess;
+
+#[derive(Component)]
+pub struct Busy;

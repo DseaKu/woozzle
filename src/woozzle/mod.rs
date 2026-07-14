@@ -11,6 +11,7 @@ pub struct WoozzlePlugin;
 impl Plugin for WoozzlePlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<resources::Data>()
+            .add_systems(Update, systems::get_a_job)
             .init_resource::<resources::Visible>()
             .add_observer(systems::update_visible_woozzles::<events::DataUpdated>)
             .add_observer(systems::update_visible_woozzles::<camera::events::VisibleHexesUpdated>)

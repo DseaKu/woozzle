@@ -1,7 +1,6 @@
 use crate::{graphics, jobs::components::ActionQueue};
 
 use bevy::prelude::*;
-use super::components::*;
 
 #[derive(Bundle)]
 pub struct Woozzle {
