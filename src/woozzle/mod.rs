@@ -2,7 +2,7 @@ use crate::camera;
 use bevy::prelude::*;
 
 mod bundles;
-mod components;
+pub mod components;
 pub mod events;
 pub mod resources;
 mod systems;

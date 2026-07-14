@@ -5,20 +5,17 @@ use std::collections::VecDeque;
 pub struct GoToPoint(pub Vec2);
 
 #[derive(Component)]
-pub struct _Wait(pub f32);
+pub struct Wait(pub f32);
 
 #[derive(Clone)]
 pub enum Action {
     // GoToHex(Hex),
     GoToPoint(Vec2),
-    _Wait(f32),
+    Wait(f32),
 }
 
 #[derive(Component, Default)]
 pub struct ActionQueue(pub VecDeque<Action>);
-
-#[derive(Component)]
-pub struct CurrentAction(pub Action);
 
 #[derive(Component)]
 pub struct JobLess;
