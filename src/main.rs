@@ -1,3 +1,4 @@
+use avian2d::prelude::*;
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
@@ -37,6 +38,8 @@ fn main() {
     )
     .add_plugins(FrameTimeDiagnosticsPlugin::default())
     // Own Plugins
+    .add_plugins(PhysicsPlugins::default())
+    .insert_resource(Gravity(Vec2::ZERO))
     .add_plugins(jobs::JobsPlugin)
     .add_plugins(ui::UiPlugin)
     .add_plugins(input::InputPlugin)
