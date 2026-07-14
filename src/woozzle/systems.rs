@@ -1,14 +1,13 @@
 use super::events::*;
 use super::resources::*;
-use crate::jobs::components::{Action, ActionQueue, JobLess};
+use crate::jobs::components::{ActionQueue, JobLess};
+use crate::jobs::major_jobs::assign_rectangle_patrol;
 use crate::{camera, input, map};
 use bevy::prelude::*;
 
 pub fn get_a_job(query: Query<(Entity, &mut ActionQueue), With<JobLess>>, mut commands: Commands) {
     for (woozzle, mut empty_queue) in query {
-        empty_queue
-            .0
-            .push_back(Action::GoToPoint(Vec2 { x: 30.0, y: -30.0 }));
+        assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 30.0);
 
         commands.entity(woozzle).remove::<JobLess>();
     }
