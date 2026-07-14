@@ -5,6 +5,7 @@ mod camera;
 mod diagnostic;
 mod graphics;
 mod input;
+mod jobs;
 mod macros;
 mod map;
 mod ui;
@@ -36,6 +37,7 @@ fn main() {
     )
     .add_plugins(FrameTimeDiagnosticsPlugin::default())
     // Own Plugins
+    .add_plugins(jobs::JobsPlugin)
     .add_plugins(ui::UiPlugin)
     .add_plugins(input::InputPlugin)
     .add_plugins(camera::CameraPlugin)

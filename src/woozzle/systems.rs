@@ -1,15 +1,13 @@
-use super::components::WoozzleState;
 use crate::{camera, input, map};
 use bevy::prelude::*;
 
-pub fn update_task(mut state_query: Query<&mut WoozzleState, With<super::components::NeedsTask>>) {
-    for mut state in &mut state_query {
-        if *state != WoozzleState::Idle {
-            continue;
-        }
-        // Fetch task
-    }
-}
+// pub fn get_a_job(
+//     mut state_query: Query<&mut jobs::components, With<super::components::NeedsTask>>,
+// ) {
+//     for mut state in &mut state_query {
+//         // Fetch task
+//     }
+// }
 
 pub fn set_woozle(
     _trigger: On<input::events::SpawnWoozle>,
