@@ -1,0 +1,80 @@
+# Woozzle Task System Architecture
+
+This document outlines the architecture for the automated worker (Woozzle) task system in Bevy ECS.
+
+## Core Concept: High-Level Tasks vs. Low-Level Actions
+Instead of writing monolithic systems that handle complex state machines, the Woozzle task system is built around an **Action Queue** pattern. This separates the *decision* of what to do from the *execution* of how to do it.
+
+1. **Tasks** are high-level goals (e.g., "Mine Rock at Hex X", "Carry Item to Base").
+2. **Actions** are the low-level, primitive instructions required to achieve a Task (e.g., `GoTo`, `Wait`, `PickUp`).
+
+---
+
+## Components
+
+The architecture relies on three primary components added to each Woozzle:
+
+### 1. `Action` Enum
+The primitive instructions a worker knows how to execute.
+```rust
+#[derive(Clone, Debug)]
+pub enum Action {
+    GoTo(Hex),
+    PickUp(Entity),
+    DropItem,
+    Wait(f32), 
+}
+```
+
+### 2. `ActionQueue` Component
+A queue of actions the worker needs to perform in order. This acts as the worker's "memory" or "to-do list".
+```rust
+#[derive(Component, Default)]
+pub struct ActionQueue(pub std::collections::VecDeque<Action>);
+```
+
+### 3. `CurrentAction` Component
+The specific action the worker is actively executing *right now*. If a worker has an `ActionQueue` but no `CurrentAction`, they are ready to pop the next instruction.
+```rust
+#[derive(Component)]
+pub struct CurrentAction(pub Action);
+```
+
+---
+
+## Systems Pipeline
+
+The logic is broken down into three distinct phases that run every frame:
+
+### Phase 1: The Brain (Task Assignment)
+**Goal:** Find idle workers and give them a job.
+- Queries for Woozzles that have an empty `ActionQueue` and no `CurrentAction`.
+- The system evaluates the game world (e.g., finds a rock that needs mining).
+- It breaks the high-level task down into a sequence of `Action`s.
+- It pushes these actions into the worker's `ActionQueue`.
+
+### Phase 2: The Dispatcher
+**Goal:** Feed the next instruction to ready workers.
+- Queries for Woozzles that have an `ActionQueue` but **do not** have a `CurrentAction`.
+- Pops the front `Action` from the queue.
+- Inserts that `Action` into the worker's ECS entity as a `CurrentAction` component.
+
+### Phase 3: The Execution Systems
+**Goal:** Physically carry out the current action.
+- You write one small, isolated system for each variant in the `Action` enum (e.g., `execute_goto_action`, `execute_wait_action`).
+- These systems query for `&mut CurrentAction` and any required physical components (like `&mut Transform`).
+- Once the action's condition is met (e.g., the worker arrives at the destination, or the wait timer hits 0.0), the system simply runs `commands.entity(worker).remove::<CurrentAction>()`.
+- By removing `CurrentAction`, the worker naturally falls back into the Dispatcher's query on the next frame, seamlessly starting the next action.
+
+---
+
+## Benefits of this Architecture
+
+1. **Highly Extensible:** To add a new capability (like "Attack"), you simply add an `Action::Attack(Entity)` enum variant and write one isolated `execute_attack_action` system. The core queue logic never needs to be touched.
+2. **Easy Interrupts:** If a Woozzle gets attacked and needs to flee, another system can instantly override its behavior by running:
+   ```rust
+   commands.entity(worker)
+       .insert(ActionQueue::new()) // Clear the queue
+       .remove::<CurrentAction>(); // Stop current action
+   ```
+3. **Clean ECS Design:** Actions are evaluated concurrently, but state transitions are handled cleanly via Bevy's structural changes (inserting/removing components), ensuring no overlapping states or confusing boolean flags.

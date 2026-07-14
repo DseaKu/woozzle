@@ -4,7 +4,7 @@
 - [x] delete(right click) tiles
 - [x] spawn woozzle at mouse coords triggered (key e)
 - [x] rework spawn system of tiles like woozzle
-- [ ] keep track of spawned/visible tiles and woozzles
+- [x] keep track of spawned/visible tiles and woozzles
 - [ ] create a state machine for woozzles
 - [ ] let woozzle move to a certain point
 - [ ] animate woozzle

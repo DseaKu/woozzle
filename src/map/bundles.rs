@@ -16,6 +16,7 @@ impl HexTile {
                 hex.to_world().y,
                 graphics::DrawOrder::Ground.as_f32(),
             ),
+
             tile_type,
         }
     }
