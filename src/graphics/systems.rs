@@ -1,9 +1,9 @@
+use super::components::*;
 use super::resources;
+use super::resources::*;
 use crate::map;
 use crate::woozzle;
 use bevy::prelude::*;
-use super::resources::*;
-use super::components::*;
 
 const PATH_PREFIX: &str = "/assets/";
 const TILESET_PATH: &str = "images/tileset16.png";

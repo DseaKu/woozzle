@@ -7,6 +7,7 @@ edition = "2024"
 avian2d = "0.7.0"
 bevy = { version = "0.19.0", features = ["dynamic_linking"] }
 bevy-inspector-egui = "0.37.0"
+rand = "0.10.2"
 strum = "0.28.0"
 strum_macros = "0.28.0"
 

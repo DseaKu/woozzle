@@ -14,8 +14,8 @@ pub struct Woozzle {
     speed: MoveSpeed,
     rigid_body: RigidBody,
     collider: Collider,
-    locked_axes: LockedAxes,
-    sleeping_disabled: SleepingDisabled,
+    locked_axes: LockedAxes, // Disable spinning when colliding
+    colliding_entities: CollidingEntities,
 }
 
 impl Woozzle {
@@ -28,7 +28,7 @@ impl Woozzle {
             rigid_body: RigidBody::Dynamic,
             collider: Collider::circle(COLLSION_RADIUS),
             locked_axes: LockedAxes::ROTATION_LOCKED,
-            sleeping_disabled: SleepingDisabled,
+            colliding_entities: CollidingEntities::default(),
         }
     }
 }

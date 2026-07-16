@@ -1,10 +1,10 @@
+use super::bundles::*;
 use super::components::{Hex, TerrainType};
+use super::events::*;
+use super::resources::*;
 use crate::camera;
 use crate::input;
 use bevy::prelude::*;
-use super::events::*;
-use super::bundles::*;
-use super::resources::*;
 
 // 16 bit tile assets
 const HEX_WIDTH: f32 = 9.25;
@@ -49,9 +49,7 @@ pub fn set_tile(
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    let tile_entity = commands
-        .spawn(HexTile::new(hex, TerrainType::Water))
-        .id();
+    let tile_entity = commands.spawn(HexTile::new(hex, TerrainType::Water)).id();
 
     tile_data.entities.insert(hex, tile_entity);
     commands.trigger(DataUpdated);

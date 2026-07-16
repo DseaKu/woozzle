@@ -1,6 +1,6 @@
+use super::resources::*;
 use crate::map;
 use bevy::prelude::*;
-use super::resources::*;
 
 #[derive(Bundle)]
 pub struct WoozzleSprite {
@@ -26,10 +26,7 @@ pub struct TileSprite {
     sprite: Sprite,
 }
 impl TileSprite {
-    pub fn new(
-        assets: &TilesetAsset,
-        terrain_type: map::components::TerrainType,
-    ) -> Self {
+    pub fn new(assets: &TilesetAsset, terrain_type: map::components::TerrainType) -> Self {
         Self {
             sprite: Sprite::from_atlas_image(
                 assets.image.clone(),
