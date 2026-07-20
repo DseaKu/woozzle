@@ -12,6 +12,7 @@ impl Plugin for InputPlugin {
             .add_systems(Update, systems::send_set_tile_event)
             .add_systems(Update, systems::send_remove_tile_event)
             .add_systems(Update, systems::send_spawn_woozle_event)
+            .add_systems(Update, systems::send_change_major_job_event)
             .add_systems(Update, systems::update_mouse_world_pos);
     }
 }

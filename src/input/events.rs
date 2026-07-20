@@ -11,3 +11,6 @@ pub struct RemoveTile;
 
 #[derive(Event)]
 pub struct SpawnWoozle;
+
+#[derive(Event)]
+pub struct ChangeMajorJob;

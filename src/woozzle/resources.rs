@@ -10,3 +10,6 @@ pub struct Data {
 pub struct Visible {
     pub entities: Vec<Entity>,
 }
+
+#[derive(Resource, Default)]
+pub struct MajorJobFlag(pub bool);

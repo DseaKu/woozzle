@@ -13,15 +13,18 @@ const TILE_SIZE: u32 = 16;
 pub fn insert_woozzle_sprite(
     _trigger: On<woozzle::events::VisibleUpdated>,
     visible_woozzles: Res<woozzle::resources::Visible>,
+    existing_sprites: Query<Entity, With<super::components::VisibleLabel>>,
     mut commands: Commands,
     woozzle_asset: Res<WoozzleAsset>,
 ) {
     use super::components::{VisibleLabel, WoozzleSprite};
 
     for woozzle in &visible_woozzles.entities {
-        commands
-            .entity(*woozzle)
-            .insert((WoozzleSprite::new(&woozzle_asset), VisibleLabel));
+        if existing_sprites.get(*woozzle).is_err() {
+            commands
+                .entity(*woozzle)
+                .insert((WoozzleSprite::new(&woozzle_asset), VisibleLabel));
+        }
     }
 }
 pub fn remove_woozzle_sprite(

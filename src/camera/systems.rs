@@ -12,7 +12,7 @@ const CAMERA_SPEED: f32 = 200.0;
 const ZOOM_SPEED: f32 = 0.05;
 const ZOOM_STEP_SIZE: f32 = 0.0625;
 const MIN_SCALE: f32 = ZOOM_STEP_SIZE * 2.0;
-const MAX_SCALE: f32 = ZOOM_STEP_SIZE * 4.0;
+const MAX_SCALE: f32 = ZOOM_STEP_SIZE * 6.0;
 
 pub fn move_camera(
     keyboard_input: Res<ButtonInput<KeyCode>>,

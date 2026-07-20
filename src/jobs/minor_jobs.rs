@@ -63,7 +63,7 @@ pub fn go_to_point(
     ) in &mut query
     {
         const ARRIVAL_TOLERANCE: f32 = 20.0;
-        const COLLISION_MAX: u32 = 200;
+        const COLLISION_MAX: u32 = 500;
         const GHOST_DURATION: f32 = 1.0;
 
         let dst_pos = go_to_point.0;

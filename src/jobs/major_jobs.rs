@@ -19,7 +19,7 @@ pub fn assign_rectangle_patrol(action_queue: &mut ActionQueue, start_pos: Vec2, 
 }
 
 pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
-    const MAX_ACTIONS: u32 = 10;
+    const MAX_ACTIONS: u32 = 2;
     const MAX_WAIT_DURATION: f32 = 5.0;
 
     let num_actions = rand::random_range(1..=MAX_ACTIONS);

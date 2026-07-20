@@ -1,28 +1,58 @@
 use super::events::*;
 use super::resources::*;
+use crate::input::events::ChangeMajorJob;
 use crate::jobs::components::{ActionQueue, JobLess};
 use crate::jobs::major_jobs::assign_rectangle_patrol;
 use crate::jobs::major_jobs::wandering;
 use crate::woozzle::components;
+use crate::woozzle::resources;
 use crate::{camera, input, map};
 use avian2d::prelude::*;
 use bevy::prelude::*;
+use std::cmp::Ordering;
 
-pub fn update_sprite_facing(
-    mut query: Query<(&LinearVelocity, &mut Sprite), With<components::Woozzle>>,
-) {
-    for (velocity, mut sprite) in &mut query {
-        if velocity.0.x < -0.1 {
-            sprite.flip_x = false;
-        } else if velocity.0.x > 0.1 {
-            sprite.flip_x = true;
-        }
+pub fn change_major_job(_trigger: On<ChangeMajorJob>, mut flag: ResMut<resources::MajorJobFlag>) {
+    match flag.0 {
+        true => flag.0 = false,
+        false => flag.0 = true,
     }
 }
 
-pub fn get_a_job(query: Query<(Entity, &mut ActionQueue), With<JobLess>>, mut commands: Commands) {
+pub fn update_sprite_facing(
+    mut query: Query<(Entity, &LinearVelocity, &mut Sprite), With<components::DirtyFaceDir>>,
+    mut commands: Commands,
+) {
+    for (woozzle, velocity, mut sprite) in &mut query {
+        // Flip sprite
+        match velocity.0.x.partial_cmp(&0.0) {
+            Some(Ordering::Less) => sprite.flip_x = false,
+            Some(Ordering::Greater) => sprite.flip_x = true,
+            _ => {}
+        }
+
+        // Remove mark
+        commands
+            .entity(woozzle)
+            .remove::<components::DirtyFaceDir>();
+    }
+}
+
+pub fn mark_all_face_dir_dirty(
+    query: Query<Entity, With<components::Woozzle>>,
+    mut commands: Commands,
+) {
+    for woozzle in query {
+        commands.entity(woozzle).insert(components::DirtyFaceDir);
+    }
+}
+
+pub fn get_a_job(
+    job_flag: Res<MajorJobFlag>,
+    query: Query<(Entity, &mut ActionQueue), With<JobLess>>,
+    mut commands: Commands,
+) {
     for (woozzle, mut empty_queue) in query {
-        if false {
+        if job_flag.0 {
             assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 70.0);
         } else {
             wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 200.0);

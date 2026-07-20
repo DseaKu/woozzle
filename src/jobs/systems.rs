@@ -1,3 +1,5 @@
+use crate::woozzle::components::DirtyFaceDir;
+
 use super::components::*;
 use bevy::prelude::*;
 
@@ -12,10 +14,9 @@ pub fn process_job(
             continue;
         }
 
-        commands.entity(woozzle).insert(Busy);
-
+        // Pop next action
         let next_action = action_queue.0.pop_front().unwrap();
-
+        commands.entity(woozzle).insert(Busy);
         match next_action {
             Action::GoToPoint(pos) => {
                 commands.entity(woozzle).insert(GoToPoint(pos));
@@ -24,5 +25,8 @@ pub fn process_job(
                 commands.entity(woozzle).insert(Wait(time));
             }
         }
+
+        // Mark for updating face dir
+        commands.entity(woozzle).insert(DirtyFaceDir);
     }
 }

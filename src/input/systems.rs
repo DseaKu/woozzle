@@ -3,6 +3,15 @@ use super::resources;
 use bevy::prelude::*;
 use bevy::window;
 
+pub fn send_change_major_job_event(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut commands: Commands,
+) {
+    if keyboard_input.just_pressed(KeyCode::Digit1) {
+        commands.trigger(events::ChangeMajorJob);
+    }
+}
+
 pub fn send_toggle_debug_ui_event(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut commands: Commands,

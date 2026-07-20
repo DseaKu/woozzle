@@ -11,3 +11,6 @@ pub struct CollisionCounter(pub u32);
 
 #[derive(Component)]
 pub struct GhostMode(pub f32);
+
+#[derive(Component)]
+pub struct DirtyFaceDir;
