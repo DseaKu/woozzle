@@ -81,7 +81,7 @@ pub fn load_woozzle_assets(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    let layout = TextureAtlasLayout::from_grid(UVec2::new(TILE_SIZE, TILE_SIZE), 1, 1, None, None);
+    let layout = TextureAtlasLayout::from_grid(UVec2::new(TILE_SIZE, TILE_SIZE), 2, 2, None, None);
     commands.insert_resource(resources::WoozzleAsset {
         image: asset_server.load::<Image>(WOOZZLE_PATH),
         layout: texture_atlas_layouts.add(layout),
