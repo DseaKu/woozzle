@@ -3,12 +3,26 @@ use super::resources::*;
 use crate::jobs::components::{ActionQueue, JobLess};
 use crate::jobs::major_jobs::assign_rectangle_patrol;
 use crate::jobs::major_jobs::wandering;
+use crate::woozzle::components;
 use crate::{camera, input, map};
+use avian2d::prelude::*;
 use bevy::prelude::*;
+
+pub fn update_sprite_facing(
+    mut query: Query<(&LinearVelocity, &mut Sprite), With<components::Woozzle>>,
+) {
+    for (velocity, mut sprite) in &mut query {
+        if velocity.0.x < -0.1 {
+            sprite.flip_x = false;
+        } else if velocity.0.x > 0.1 {
+            sprite.flip_x = true;
+        }
+    }
+}
 
 pub fn get_a_job(query: Query<(Entity, &mut ActionQueue), With<JobLess>>, mut commands: Commands) {
     for (woozzle, mut empty_queue) in query {
-        if true {
+        if false {
             assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 70.0);
         } else {
             wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 200.0);
