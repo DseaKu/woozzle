@@ -4,6 +4,7 @@ use crate::input::events::ChangeMajorJob;
 use crate::jobs::components::{ActionQueue, JobLess};
 use crate::jobs::major_jobs::assign_rectangle_patrol;
 use crate::jobs::major_jobs::wandering;
+use crate::woozzle;
 use crate::woozzle::components;
 use crate::woozzle::resources;
 use crate::{camera, input, map};
@@ -11,6 +12,26 @@ use avian2d::prelude::*;
 use bevy::prelude::*;
 use std::cmp::Ordering;
 
+pub fn update_woozzle_hex_data(
+    mut woozzle_data: ResMut<woozzle::resources::Data>,
+    query: Query<(Entity, &Transform), With<woozzle::components::Woozzle>>,
+    mut commands: Commands,
+) {
+    // Clear the old  map
+    woozzle_data.entities.clear();
+
+    // Repopulate the map with each Woozzle's current hex location
+    for (entity, transform) in &query {
+        let current_hex = map::components::Hex::from_world(transform.translation.truncate());
+
+        woozzle_data
+            .entities
+            .entry(current_hex)
+            .or_default()
+            .push(entity);
+    }
+    commands.trigger(DataUpdated);
+}
 pub fn change_major_job(_trigger: On<ChangeMajorJob>, mut flag: ResMut<resources::MajorJobFlag>) {
     match flag.0 {
         true => flag.0 = false,

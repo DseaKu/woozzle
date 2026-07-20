@@ -10,7 +10,8 @@ mod systems;
 
 use std::time::Duration;
 
-const FPS_REFRESH_INTERVAL: f32 = 0.3;
+const FACE_DIR_INTERVAL: f32 = 5.0;
+const UPDATE_HEX_INTERVAL: f32 = 1.0;
 
 pub struct WoozzlePlugin;
 impl Plugin for WoozzlePlugin {
@@ -21,7 +22,12 @@ impl Plugin for WoozzlePlugin {
             .add_systems(
                 Update,
                 systems::mark_all_face_dir_dirty
-                    .run_if(on_timer(Duration::from_secs_f32(FPS_REFRESH_INTERVAL))),
+                    .run_if(on_timer(Duration::from_secs_f32(FACE_DIR_INTERVAL))),
+            )
+            .add_systems(
+                Update,
+                systems::update_woozzle_hex_data
+                    .run_if(on_timer(Duration::from_secs_f32(UPDATE_HEX_INTERVAL))),
             )
             .init_resource::<resources::Visible>()
             .init_resource::<resources::MajorJobFlag>()
