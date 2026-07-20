@@ -1,9 +1,11 @@
-use crate::jobs::components::{Action, ActionQueue, Busy, GoToPoint, Wait};
-use crate::woozzle::components::{MoveSpeed, Woozzle};
+use crate::jobs::components::{Busy, GoToPoint, Wait};
+use crate::woozzle::components::{CollisionCounter, GhostMode, MoveSpeed, Woozzle};
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
-const ARRIVAL_TOLERANCE: f32 = 5.0;
+const ARRIVAL_TOLERANCE: f32 = 20.0;
+const COLLISION_MAX: u32 = 75;
+const GHOST_DURATION: f32 = 1.0;
 
 pub fn wait(
     query: Query<(Entity, &mut LinearVelocity, &mut Wait), With<Woozzle>>,
@@ -22,6 +24,23 @@ pub fn wait(
     }
 }
 
+pub fn ghost_system(
+    mut query: Query<(Entity, &mut GhostMode)>,
+    time: Res<Time>,
+    mut commands: Commands,
+) {
+    for (entity, mut ghost) in &mut query {
+        ghost.0 -= time.delta_secs();
+
+        if ghost.0 <= 0.0 {
+            commands
+                .entity(entity)
+                .remove::<GhostMode>()
+                .insert(Collider::circle(2.5)); // Using COLLSION_RADIUS from bundles.rs
+        }
+    }
+}
+
 type MoverQuery<'a> = (
     Entity,
     &'a GoToPoint,
@@ -29,15 +48,22 @@ type MoverQuery<'a> = (
     &'a MoveSpeed,
     &'a mut LinearVelocity,
     &'a CollidingEntities,
-    &'a mut ActionQueue,
+    &'a mut CollisionCounter,
 );
 pub fn go_to_point(
     mut query: Query<MoverQuery, With<Woozzle>>,
     time: Res<Time>,
     mut commands: Commands,
 ) {
-    for (woozzle, go_to_point, mut transform, move_speed, mut velocity, collision, action_queue) in
-        &mut query
+    for (
+        woozzle,
+        go_to_point,
+        mut transform,
+        move_speed,
+        mut velocity,
+        collision,
+        mut collision_counter,
+    ) in &mut query
     {
         let dst_pos = go_to_point.0;
         let cur_pos = transform.translation.truncate();
@@ -55,7 +81,22 @@ pub fn go_to_point(
             }
 
             commands.entity(woozzle).remove::<(GoToPoint, Busy)>();
+            collision_counter.0 = 0;
             continue;
+        }
+
+        // Ghost Mode woozzle, if too many collisions
+        if !collision.is_empty() {
+            collision_counter.0 += 1;
+            if collision_counter.0 >= COLLISION_MAX {
+                commands
+                    .entity(woozzle)
+                    .remove::<Collider>()
+                    .insert(GhostMode(GHOST_DURATION));
+                collision_counter.0 = 0;
+            }
+        } else {
+            collision_counter.0 = collision_counter.0.saturating_sub(1);
         }
 
         let target_velocity = direction.normalize() * move_speed.0;

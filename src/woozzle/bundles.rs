@@ -1,7 +1,8 @@
-use crate::{graphics, jobs::components::ActionQueue, woozzle::components::MoveSpeed};
+use crate::woozzle::components::{CollisionCounter, MoveSpeed};
+use crate::{graphics, jobs::components::ActionQueue};
 
 const BASE_SPEED: f32 = 100.0;
-const COLLSION_RADIUS: f32 = 2.5;
+const COLLSION_RADIUS: f32 = 5.0;
 
 use avian2d::prelude::*;
 use bevy::prelude::*;
@@ -16,6 +17,7 @@ pub struct Woozzle {
     collider: Collider,
     locked_axes: LockedAxes, // Disable spinning when colliding
     colliding_entities: CollidingEntities,
+    collsion_counter: CollisionCounter,
 }
 
 impl Woozzle {
@@ -29,6 +31,7 @@ impl Woozzle {
             collider: Collider::circle(COLLSION_RADIUS),
             locked_axes: LockedAxes::ROTATION_LOCKED,
             colliding_entities: CollidingEntities::default(),
+            collsion_counter: CollisionCounter::default(),
         }
     }
 }

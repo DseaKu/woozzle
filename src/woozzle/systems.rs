@@ -7,7 +7,7 @@ use bevy::prelude::*;
 
 pub fn get_a_job(query: Query<(Entity, &mut ActionQueue), With<JobLess>>, mut commands: Commands) {
     for (woozzle, mut empty_queue) in query {
-        assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 30.0);
+        assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 70.0);
 
         commands.entity(woozzle).remove::<JobLess>();
     }
