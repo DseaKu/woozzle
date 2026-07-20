@@ -19,6 +19,7 @@ impl Plugin for WoozzlePlugin {
         app.init_resource::<resources::Data>()
             .add_systems(Update, systems::get_a_job)
             .add_systems(Update, systems::update_sprite_facing)
+            .add_systems(Update, systems::update_sprite_running)
             .add_systems(
                 Update,
                 systems::mark_all_face_dir_dirty

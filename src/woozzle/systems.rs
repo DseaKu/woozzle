@@ -1,7 +1,7 @@
 use super::events::*;
 use super::resources::*;
 use crate::input::events::ChangeMajorJob;
-use crate::jobs::components::{ActionQueue, JobLess};
+use crate::jobs::components::{ActionQueue, GoToPoint, JobLess};
 use crate::jobs::major_jobs::assign_rectangle_patrol;
 use crate::jobs::major_jobs::wandering;
 use crate::woozzle;
@@ -55,6 +55,26 @@ pub fn update_sprite_facing(
         commands
             .entity(woozzle)
             .remove::<components::DirtyFaceDir>();
+    }
+}
+
+pub fn update_sprite_running(
+    mut query: Query<
+        (&mut Sprite, Option<&GoToPoint>),
+        (
+            With<components::Woozzle>,
+            With<crate::graphics::components::VisibleLabel>,
+        ),
+    >,
+) {
+    for (mut sprite, go_to_point) in &mut query {
+        if let Some(atlas) = &mut sprite.texture_atlas {
+            if go_to_point.is_some() {
+                atlas.index = 2;
+            } else {
+                atlas.index = 0;
+            }
+        }
     }
 }
 
