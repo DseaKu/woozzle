@@ -1,11 +1,8 @@
 use crate::jobs::components::{Busy, GoToPoint, Wait};
+use crate::woozzle::bundles::COLLSION_RADIUS;
 use crate::woozzle::components::{CollisionCounter, GhostMode, MoveSpeed, Woozzle};
 use avian2d::prelude::*;
 use bevy::prelude::*;
-
-const ARRIVAL_TOLERANCE: f32 = 20.0;
-const COLLISION_MAX: u32 = 75;
-const GHOST_DURATION: f32 = 1.0;
 
 pub fn wait(
     query: Query<(Entity, &mut LinearVelocity, &mut Wait), With<Woozzle>>,
@@ -36,7 +33,7 @@ pub fn ghost_system(
             commands
                 .entity(entity)
                 .remove::<GhostMode>()
-                .insert(Collider::circle(2.5)); // Using COLLSION_RADIUS from bundles.rs
+                .insert(Collider::circle(COLLSION_RADIUS));
         }
     }
 }
@@ -65,6 +62,10 @@ pub fn go_to_point(
         mut collision_counter,
     ) in &mut query
     {
+        const ARRIVAL_TOLERANCE: f32 = 20.0;
+        const COLLISION_MAX: u32 = 200;
+        const GHOST_DURATION: f32 = 1.0;
+
         let dst_pos = go_to_point.0;
         let cur_pos = transform.translation.truncate();
         let direction = dst_pos - cur_pos;
