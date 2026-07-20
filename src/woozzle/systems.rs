@@ -53,9 +53,9 @@ pub fn get_a_job(
 ) {
     for (woozzle, mut empty_queue) in query {
         if job_flag.0 {
-            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 70.0);
+            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 200.0);
         } else {
-            wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 200.0);
+            wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 800.0);
         }
 
         commands.entity(woozzle).remove::<JobLess>();

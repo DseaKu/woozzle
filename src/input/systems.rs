@@ -49,7 +49,7 @@ pub fn send_remove_tile_event(mut commands: Commands, mouse_input: Res<ButtonInp
 }
 
 pub fn send_spawn_woozle_event(mut commands: Commands, keyboard_input: Res<ButtonInput<KeyCode>>) {
-    if keyboard_input.just_pressed(KeyCode::KeyE) {
+    if keyboard_input.pressed(KeyCode::KeyE) {
         commands.trigger(events::SpawnWoozle);
     }
 }

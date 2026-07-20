@@ -46,12 +46,9 @@ pub fn update_woozzle_entity_text(
     visible_woozzles: Res<woozzle::resources::Visible>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
-    **text = format!(
-        "Woozles={}, Culled={}",
-        woozzle_data.entities.len(),
-        visible_woozzles.entities.len()
-    )
-    .into();
+    let total: usize = woozzle_data.entities.values().map(|v| v.len()).sum();
+    let visible = visible_woozzles.entities.len();
+    **text = format!("Woozles: Total={}, Visible={}", total, visible).into();
 }
 
 pub fn update_tile_entity_text(
@@ -61,12 +58,9 @@ pub fn update_tile_entity_text(
     visible_tiles: Res<map::resources::Visible>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
-    **text = format!(
-        "Tiles={}, Culled={}",
-        tile_data.entities.len(),
-        visible_tiles.entities.len()
-    )
-    .into();
+    let total = tile_data.entities.len();
+    let visible = visible_tiles.entities.len();
+    **text = format!("Tiles: Total={}, Visible={}", total, visible).into();
 }
 
 pub fn update_fps_text(
