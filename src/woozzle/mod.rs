@@ -10,7 +10,7 @@ mod systems;
 
 use std::time::Duration;
 
-const FACE_DIR_INTERVAL: f32 = 5.0;
+const FACE_DIR_INTERVAL: f32 = 0.3;
 const UPDATE_HEX_INTERVAL: f32 = 0.3; // The function runs through every woozzle
 
 pub struct WoozzlePlugin;

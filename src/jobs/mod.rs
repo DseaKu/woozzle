@@ -9,9 +9,9 @@ mod systems;
 pub struct JobsPlugin;
 impl Plugin for JobsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, systems::process_job)
-            .add_systems(Update, minor_jobs::wait)
-            .add_systems(Update, minor_jobs::ghost_system)
-            .add_systems(Update, minor_jobs::go_to_point);
+        app.add_systems(FixedUpdate, systems::process_job)
+            .add_systems(FixedUpdate, minor_jobs::wait)
+            .add_systems(FixedUpdate, minor_jobs::ghost_system)
+            .add_systems(FixedUpdate, minor_jobs::go_to_point);
     }
 }

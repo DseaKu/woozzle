@@ -58,15 +58,14 @@ pub fn update_sprite_facing(
     }
 }
 
-pub fn update_sprite_running(
-    mut query: Query<
-        (&mut Sprite, Option<&GoToPoint>),
-        (
-            With<components::Woozzle>,
-            With<crate::graphics::components::VisibleLabel>,
-        ),
-    >,
-) {
+type VisibleWoozzleSpriteQuery<'a> = (&'a mut Sprite, Option<&'a GoToPoint>);
+
+type VisibleWoozzleFilter = (
+    With<components::Woozzle>,
+    With<crate::graphics::components::VisibleLabel>,
+);
+
+pub fn update_sprite_running(mut query: Query<VisibleWoozzleSpriteQuery, VisibleWoozzleFilter>) {
     for (mut sprite, go_to_point) in &mut query {
         if let Some(atlas) = &mut sprite.texture_atlas {
             if go_to_point.is_some() {
@@ -94,9 +93,9 @@ pub fn get_a_job(
 ) {
     for (woozzle, mut empty_queue) in query {
         if job_flag.0 {
-            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 30.0, y: 10.0 }, 200.0);
+            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 10.0, y: 10.0 }, 400.0);
         } else {
-            wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 800.0);
+            wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 1200.0);
         }
 
         commands.entity(woozzle).remove::<JobLess>();
