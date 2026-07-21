@@ -8,7 +8,9 @@
 - [x] let woozzle move to a certain point
 - [x] set path destination points (key q), woozzle need to visit all points in
       certain order
-- [ ] animate woozzle
+- [x] animate woozzle
+- [ ] make radial menu, for placing tile, removing tile ...
+- [ ] make sub radial menu placing which tile?
 - [ ] make hex non walk able hex tiles, without breaking path finding
 - [ ] create resoucre
 - [ ] points on hex tiles
