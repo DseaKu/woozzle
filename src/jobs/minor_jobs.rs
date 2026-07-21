@@ -73,13 +73,20 @@ pub fn go_to_point(
         const COLLISION_DETOUR: u32 = 50;
         const COLLISION_MAX: u32 = 500;
         const GHOST_DURATION: f32 = 1.0;
+        const ARRIVAL_TOLERANCE_MAX: f32 = 3.0;
 
-        let dst_pos = go_to_point.0;
-        let arrival_tolerance = go_to_point.1;
+        let dst_pos = go_to_point.target;
         let cur_pos = transform.translation.truncate();
         let direction = dst_pos - cur_pos;
         let distance = direction.length();
         let step_size = move_speed.0 * time.delta_secs();
+
+        // Increase arrival_tolerance by the collision_counter
+        let progress = (collision_counter.0 as f32 / COLLISION_MAX as f32).clamp(0.0, 1.0);
+        let arrival_tolerance = go_to_point.arrival_tolerance.lerp(
+            go_to_point.arrival_tolerance * ARRIVAL_TOLERANCE_MAX,
+            progress,
+        );
 
         // Arrival Tolerance: If woozzle arrived perfectly or it got close but got blocked
         if distance <= step_size || (distance < arrival_tolerance && !collision.is_empty()) {
@@ -105,12 +112,14 @@ pub fn go_to_point(
                 let distance = rand::random_range(20.0..50.0);
                 let random_offset = Vec2::new(angle.cos(), angle.sin() * distance);
 
-                action_queue
-                    .0
-                    .push_front(Action::GoToPoint(dst_pos, arrival_tolerance));
-                action_queue
-                    .0
-                    .push_front(Action::GoToPoint(cur_pos + random_offset, 10.0));
+                action_queue.0.push_front(Action::GoToPoint {
+                    target: dst_pos,
+                    arrival_tolerance,
+                });
+                action_queue.0.push_front(Action::GoToPoint {
+                    target: cur_pos + random_offset,
+                    arrival_tolerance: 10.0,
+                });
 
                 commands.entity(woozzle).remove::<(GoToPoint, Busy)>();
                 continue;

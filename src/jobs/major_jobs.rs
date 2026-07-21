@@ -4,21 +4,22 @@ use rand;
 
 pub fn assign_rectangle_patrol(action_queue: &mut ActionQueue, start_pos: Vec2, size: f32) {
     const ARRIVAL_TOLERANCE: f32 = 100.0;
-    action_queue.0.push_back(Action::GoToPoint(
-        Vec2::new(start_pos.x + size, start_pos.y),
-        ARRIVAL_TOLERANCE,
-    ));
-    action_queue.0.push_back(Action::GoToPoint(
-        Vec2::new(start_pos.x + size, start_pos.y - size),
-        ARRIVAL_TOLERANCE,
-    ));
-    action_queue.0.push_back(Action::GoToPoint(
-        Vec2::new(start_pos.x, start_pos.y - size),
-        ARRIVAL_TOLERANCE,
-    ));
-    action_queue
-        .0
-        .push_back(Action::GoToPoint(start_pos, ARRIVAL_TOLERANCE));
+    action_queue.0.push_back(Action::GoToPoint {
+        target: Vec2::new(start_pos.x + size, start_pos.y),
+        arrival_tolerance: ARRIVAL_TOLERANCE,
+    });
+    action_queue.0.push_back(Action::GoToPoint {
+        target: Vec2::new(start_pos.x + size, start_pos.y - size),
+        arrival_tolerance: ARRIVAL_TOLERANCE,
+    });
+    action_queue.0.push_back(Action::GoToPoint {
+        target: Vec2::new(start_pos.x, start_pos.y - size),
+        arrival_tolerance: ARRIVAL_TOLERANCE,
+    });
+    action_queue.0.push_back(Action::GoToPoint {
+        target: start_pos,
+        arrival_tolerance: ARRIVAL_TOLERANCE,
+    });
 }
 
 pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
@@ -36,10 +37,10 @@ pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
                     rand::random_range(-range..range),
                     rand::random_range(-range..range),
                 );
-                action_queue.0.push_back(Action::GoToPoint(
-                    start_pos + random_point,
-                    ARRIVAL_TOLERANCE,
-                ));
+                action_queue.0.push_back(Action::GoToPoint {
+                    target: start_pos + random_point,
+                    arrival_tolerance: ARRIVAL_TOLERANCE,
+                });
             }
             // Wait
             6..9 => {

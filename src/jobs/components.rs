@@ -2,7 +2,10 @@ use bevy::prelude::*;
 use std::collections::VecDeque;
 
 #[derive(Component)]
-pub struct GoToPoint(pub Vec2, pub f32);
+pub struct GoToPoint {
+    pub target: Vec2,
+    pub arrival_tolerance: f32,
+}
 
 #[derive(Component)]
 pub struct Wait(pub f32);
@@ -10,7 +13,10 @@ pub struct Wait(pub f32);
 #[derive(Clone)]
 pub enum Action {
     // GoToHex(Hex),
-    GoToPoint(Vec2, f32),
+    GoToPoint {
+        target: Vec2,
+        arrival_tolerance: f32,
+    },
     Wait(f32),
 }
 
