@@ -1,5 +1,5 @@
 use avian2d::prelude::*;
-use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*};
+use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*, window::WindowMode};
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
 mod camera;
@@ -21,6 +21,7 @@ fn main() {
     // Bevy Plugins
     let window_plugin = WindowPlugin {
         primary_window: Some(Window {
+            mode: WindowMode::BorderlessFullscreen(MonitorSelection::Current),
             present_mode: if IS_VSYNC_ENABLED {
                 bevy::window::PresentMode::AutoVsync
             } else {

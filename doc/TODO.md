@@ -5,9 +5,8 @@
 - [x] spawn woozzle at mouse coords triggered (key e)
 - [x] rework spawn system of tiles like woozzle
 - [x] keep track of spawned/visible tiles and woozzles
-- [ ] create a state machine for woozzles
-- [ ] let woozzle move to a certain point
+- [x] let woozzle move to a certain point
 - [ ] animate woozzle
-- [ ] set path destination points (key q), woozzle need to visit all points in
+- [x] set path destination points (key q), woozzle need to visit all points in
       certain order
 - [ ] make hex non walk able hex tiles, without breaking path finding

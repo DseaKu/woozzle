@@ -7,8 +7,12 @@ use crate::input;
 use bevy::prelude::*;
 
 // 16 bit tile assets
-const HEX_WIDTH: f32 = 9.25;
-const HEX_HEIGHT: f32 = 8.0;
+// const HEX_WIDTH: f32 = 9.25;
+// const HEX_HEIGHT: f32 = 8.0;
+
+// 32 bit tile assets
+const HEX_WIDTH: f32 = 18.5;
+const HEX_HEIGHT: f32 = 16.0;
 
 const SQRT_3_OVER_3: f32 = 0.577_350_26;
 const SQRT_3: f32 = 1.732_050_8;

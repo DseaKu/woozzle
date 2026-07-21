@@ -3,24 +3,28 @@ use bevy::prelude::*;
 use rand;
 
 pub fn assign_rectangle_patrol(action_queue: &mut ActionQueue, start_pos: Vec2, size: f32) {
-    action_queue.0.push_back(Action::GoToPoint(Vec2::new(
-        start_pos.x + size,
-        start_pos.y,
-    )));
-    action_queue.0.push_back(Action::GoToPoint(Vec2::new(
-        start_pos.x + size,
-        start_pos.y - size,
-    )));
-    action_queue.0.push_back(Action::GoToPoint(Vec2::new(
-        start_pos.x,
-        start_pos.y - size,
-    )));
-    action_queue.0.push_back(Action::GoToPoint(start_pos));
+    const ARRIVAL_TOLERANCE: f32 = 100.0;
+    action_queue.0.push_back(Action::GoToPoint(
+        Vec2::new(start_pos.x + size, start_pos.y),
+        ARRIVAL_TOLERANCE,
+    ));
+    action_queue.0.push_back(Action::GoToPoint(
+        Vec2::new(start_pos.x + size, start_pos.y - size),
+        ARRIVAL_TOLERANCE,
+    ));
+    action_queue.0.push_back(Action::GoToPoint(
+        Vec2::new(start_pos.x, start_pos.y - size),
+        ARRIVAL_TOLERANCE,
+    ));
+    action_queue
+        .0
+        .push_back(Action::GoToPoint(start_pos, ARRIVAL_TOLERANCE));
 }
 
 pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
     const MAX_ACTIONS: u32 = 1;
     const MAX_WAIT_DURATION: f32 = 5.0;
+    const ARRIVAL_TOLERANCE: f32 = 200.0;
 
     let num_actions = rand::random_range(1..=MAX_ACTIONS);
 
@@ -32,9 +36,10 @@ pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
                     rand::random_range(-range..range),
                     rand::random_range(-range..range),
                 );
-                action_queue
-                    .0
-                    .push_back(Action::GoToPoint(start_pos + random_point));
+                action_queue.0.push_back(Action::GoToPoint(
+                    start_pos + random_point,
+                    ARRIVAL_TOLERANCE,
+                ));
             }
             // Wait
             6..9 => {

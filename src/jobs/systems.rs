@@ -18,8 +18,8 @@ pub fn process_job(
         let next_action = action_queue.0.pop_front().unwrap();
         commands.entity(woozzle).insert(Busy);
         match next_action {
-            Action::GoToPoint(pos) => {
-                commands.entity(woozzle).insert(GoToPoint(pos));
+            Action::GoToPoint(pos, tolerance) => {
+                commands.entity(woozzle).insert(GoToPoint(pos, tolerance));
             }
             Action::Wait(time) => {
                 commands.entity(woozzle).insert(Wait(time));
