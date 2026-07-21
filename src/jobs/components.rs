@@ -5,6 +5,7 @@ use std::collections::VecDeque;
 pub struct GoToPoint {
     pub target: Vec2,
     pub arrival_tolerance: f32,
+    pub reset_counter_on_arrival: bool,
 }
 
 #[derive(Component)]
@@ -16,6 +17,7 @@ pub enum Action {
     GoToPoint {
         target: Vec2,
         arrival_tolerance: f32,
+        reset_counter_on_arrival: bool,
     },
     Wait(f32),
 }

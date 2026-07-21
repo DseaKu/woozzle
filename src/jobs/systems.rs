@@ -21,13 +21,13 @@ pub fn process_job(
             Action::GoToPoint {
                 target,
                 arrival_tolerance,
+                reset_counter_on_arrival,
             } => {
-                commands
-                    .entity(woozzle)
-                    .insert(GoToPoint {
-                        target,
-                        arrival_tolerance,
-                    });
+                commands.entity(woozzle).insert(GoToPoint {
+                    target,
+                    arrival_tolerance,
+                    reset_counter_on_arrival,
+                });
             }
             Action::Wait(time) => {
                 commands.entity(woozzle).insert(Wait(time));

@@ -1,8 +1,8 @@
 use crate::woozzle::components::{CollisionCounter, MoveSpeed};
 use crate::{graphics, jobs::components::ActionQueue};
 
-const BASE_SPEED: f32 = 100.0;
-pub const COLLSION_RADIUS: f32 = 5.5;
+const BASE_SPEED: f32 = 150.0;
+pub const COLLSION_RADIUS: f32 = 5.0;
 
 use avian2d::prelude::*;
 use bevy::prelude::*;

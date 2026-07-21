@@ -3,22 +3,26 @@ use bevy::prelude::*;
 use rand;
 
 pub fn assign_rectangle_patrol(action_queue: &mut ActionQueue, start_pos: Vec2, size: f32) {
-    const ARRIVAL_TOLERANCE: f32 = 100.0;
+    const ARRIVAL_TOLERANCE: f32 = 50.0;
     action_queue.0.push_back(Action::GoToPoint {
         target: Vec2::new(start_pos.x + size, start_pos.y),
         arrival_tolerance: ARRIVAL_TOLERANCE,
+        reset_counter_on_arrival: true,
     });
     action_queue.0.push_back(Action::GoToPoint {
         target: Vec2::new(start_pos.x + size, start_pos.y - size),
         arrival_tolerance: ARRIVAL_TOLERANCE,
+        reset_counter_on_arrival: true,
     });
     action_queue.0.push_back(Action::GoToPoint {
         target: Vec2::new(start_pos.x, start_pos.y - size),
         arrival_tolerance: ARRIVAL_TOLERANCE,
+        reset_counter_on_arrival: true,
     });
     action_queue.0.push_back(Action::GoToPoint {
         target: start_pos,
         arrival_tolerance: ARRIVAL_TOLERANCE,
+        reset_counter_on_arrival: true,
     });
 }
 
@@ -40,6 +44,7 @@ pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
                 action_queue.0.push_back(Action::GoToPoint {
                     target: start_pos + random_point,
                     arrival_tolerance: ARRIVAL_TOLERANCE,
+                    reset_counter_on_arrival: true,
                 });
             }
             // Wait

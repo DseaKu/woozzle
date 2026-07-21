@@ -93,7 +93,7 @@ pub fn get_a_job(
 ) {
     for (woozzle, mut empty_queue) in query {
         if job_flag.0 {
-            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 10.0, y: 10.0 }, 400.0);
+            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 500.0);
         } else {
             wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 1200.0);
         }

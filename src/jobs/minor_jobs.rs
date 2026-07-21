@@ -1,12 +1,10 @@
-use std::f32::consts::TAU;
-
-use crate::jobs::components::{Action, ActionQueue, Busy, GoToPoint, Wait};
+use crate::jobs::components::{Busy, GoToPoint, Wait};
 use crate::woozzle::bundles::COLLSION_RADIUS;
 use crate::woozzle::components::{CollisionCounter, GhostMode, MoveSpeed, Woozzle};
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
-const GHOST_SPEED_FACTOR: f32 = 3.0;
+const GHOST_SPEED_FACTOR: f32 = 1.0;
 
 pub fn wait(
     query: Query<(Entity, &mut LinearVelocity, &mut Wait), With<Woozzle>>,
@@ -52,7 +50,6 @@ type MoverQuery<'a> = (
     &'a mut LinearVelocity,
     &'a CollidingEntities,
     &'a mut CollisionCounter,
-    &'a mut ActionQueue,
 );
 pub fn go_to_point(
     mut query: Query<MoverQuery, With<Woozzle>>,
@@ -67,13 +64,14 @@ pub fn go_to_point(
         mut velocity,
         collision,
         mut collision_counter,
-        mut action_queue,
     ) in &mut query
     {
-        const COLLISION_DETOUR: u32 = 50;
-        const COLLISION_MAX: u32 = 500;
-        const GHOST_DURATION: f32 = 1.0;
+        const MICRO_GHOST_THRESHOLD: u32 = 15;
+        const COLLISION_MAX: u32 = 200;
+        const GHOST_DURATION: f32 = 10.0;
+        const MICRO_GHOST_DURATION: f32 = 0.2;
         const ARRIVAL_TOLERANCE_MAX: f32 = 3.0;
+        const COLLISION_STEP_SIZE: u32 = 3;
 
         let dst_pos = go_to_point.target;
         let cur_pos = transform.translation.truncate();
@@ -98,31 +96,23 @@ pub fn go_to_point(
             }
 
             commands.entity(woozzle).remove::<(GoToPoint, Busy)>();
-            collision_counter.0 = 0;
+            if go_to_point.reset_counter_on_arrival {
+                collision_counter.0 = 0;
+            }
             continue;
         }
 
-        // Collision logic: Detour step first, then Ghost Mode
+        // Collision logic: Micro Ghost first, then Ghost Mode
         if !collision.is_empty() {
-            collision_counter.0 += 1;
+            collision_counter.0 += COLLISION_STEP_SIZE;
 
-            // Try a quick random detour step
-            if collision_counter.0 == COLLISION_DETOUR {
-                let angle = rand::random_range(0.0..TAU);
-                let distance = rand::random_range(20.0..50.0);
-                let random_offset = Vec2::new(angle.cos(), angle.sin() * distance);
-
-                action_queue.0.push_front(Action::GoToPoint {
-                    target: dst_pos,
-                    arrival_tolerance,
-                });
-                action_queue.0.push_front(Action::GoToPoint {
-                    target: cur_pos + random_offset,
-                    arrival_tolerance: 10.0,
-                });
-
-                commands.entity(woozzle).remove::<(GoToPoint, Busy)>();
-                continue;
+            // Try micro ghost step
+            if collision_counter.0 == MICRO_GHOST_THRESHOLD {
+                commands
+                    .entity(woozzle)
+                    .remove::<Collider>()
+                    .insert(GhostMode(MICRO_GHOST_DURATION));
+                move_speed.0 *= GHOST_SPEED_FACTOR;
             }
 
             // Turn into Ghost Mode if still stuck
