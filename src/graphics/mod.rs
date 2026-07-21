@@ -9,6 +9,7 @@ impl Plugin for GraphicsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, systems::load_tileset_assets)
             .add_systems(Startup, systems::load_woozzle_assets)
+            .add_systems(Update, systems::animate_sprites)
             .add_observer(systems::remove_tile_sprite)
             .add_observer(systems::insert_tile_sprite)
             .add_observer(systems::remove_woozzle_sprite)

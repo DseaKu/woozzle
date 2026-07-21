@@ -58,7 +58,10 @@ pub fn update_sprite_facing(
     }
 }
 
-type VisibleWoozzleSpriteQuery<'a> = (&'a mut Sprite, Option<&'a GoToPoint>);
+type VisibleWoozzleSpriteQuery<'a> = (
+    &'a mut crate::graphics::components::SpriteAnimation,
+    Option<&'a GoToPoint>,
+);
 
 type VisibleWoozzleFilter = (
     With<components::Woozzle>,
@@ -66,13 +69,15 @@ type VisibleWoozzleFilter = (
 );
 
 pub fn update_sprite_running(mut query: Query<VisibleWoozzleSpriteQuery, VisibleWoozzleFilter>) {
-    for (mut sprite, go_to_point) in &mut query {
-        if let Some(atlas) = &mut sprite.texture_atlas {
-            if go_to_point.is_some() {
-                atlas.index = 2;
-            } else {
-                atlas.index = 0;
+    for (mut anim, go_to_point) in &mut query {
+        if go_to_point.is_some() {
+            if anim.first_frame != 2 {
+                anim.first_frame = 2;
+                anim.last_frame = 3;
             }
+        } else if anim.first_frame != 0 {
+            anim.first_frame = 0;
+            anim.last_frame = 1;
         }
     }
 }

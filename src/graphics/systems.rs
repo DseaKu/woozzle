@@ -14,13 +14,15 @@ pub fn insert_woozzle_sprite(
     mut commands: Commands,
     woozzle_asset: Res<WoozzleAsset>,
 ) {
-    use super::components::{VisibleLabel, WoozzleSprite};
+    use super::components::{SpriteAnimation, VisibleLabel, WoozzleSprite};
 
     for woozzle in &visible_woozzles.entities {
         if existing_sprites.get(*woozzle).is_err() {
-            commands
-                .entity(*woozzle)
-                .insert((WoozzleSprite::new(&woozzle_asset), VisibleLabel));
+            commands.entity(*woozzle).insert((
+                WoozzleSprite::new(&woozzle_asset),
+                SpriteAnimation::new(6.0, 0, 1),
+                VisibleLabel,
+            ));
         }
     }
 }
@@ -30,7 +32,7 @@ pub fn remove_woozzle_sprite(
     mut commands: Commands,
     woozzle_query: Query<Entity, With<VisibleLabel>>,
 ) {
-    use super::components::{VisibleLabel, WoozzleSprite};
+    use super::components::{SpriteAnimation, VisibleLabel, WoozzleSprite};
 
     for actual_visible_woozzle in woozzle_query {
         if visible_woozzles.entities.contains(&actual_visible_woozzle) {
@@ -38,7 +40,23 @@ pub fn remove_woozzle_sprite(
         }
         commands
             .entity(actual_visible_woozzle)
-            .remove::<(WoozzleSprite, VisibleLabel)>();
+            .remove::<(WoozzleSprite, SpriteAnimation, VisibleLabel)>();
+    }
+}
+
+pub fn animate_sprites(
+    time: Res<Time>,
+    mut query: Query<(&mut SpriteAnimation, &mut Sprite), With<VisibleLabel>>,
+) {
+    for (mut anim, mut sprite) in &mut query {
+        anim.timer.tick(time.delta());
+        if anim.timer.just_finished() && let Some(atlas) = &mut sprite.texture_atlas {
+            if atlas.index < anim.first_frame || atlas.index >= anim.last_frame {
+                atlas.index = anim.first_frame;
+            } else {
+                atlas.index += 1;
+            }
+        }
     }
 }
 

@@ -15,8 +15,8 @@ impl TerrainType {
         use TerrainType::*;
         match self {
             _Empty => 0,
-            _Grass => 1,
-            Water => 2,
+            Grass => 1,
+            _Water => 2,
             _Dirt => 3,
         }
     }

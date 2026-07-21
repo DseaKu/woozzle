@@ -6,7 +6,12 @@
 - [x] rework spawn system of tiles like woozzle
 - [x] keep track of spawned/visible tiles and woozzles
 - [x] let woozzle move to a certain point
-- [ ] animate woozzle
 - [x] set path destination points (key q), woozzle need to visit all points in
       certain order
+- [ ] animate woozzle
 - [ ] make hex non walk able hex tiles, without breaking path finding
+- [ ] create resoucre
+- [ ] points on hex tiles
+- [ ]
+- [ ]
+- [ ]

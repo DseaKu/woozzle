@@ -12,7 +12,7 @@ mod map;
 mod ui;
 mod woozzle;
 
-const IS_VSYNC_ENABLED: bool = false;
+const IS_VSYNC_ENABLED: bool = true;
 const IS_INSPECTOR_ENABLED: bool = false;
 
 fn main() {

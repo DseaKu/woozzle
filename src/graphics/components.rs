@@ -2,6 +2,23 @@ use super::resources::*;
 use crate::map;
 use bevy::prelude::*;
 
+#[derive(Component)]
+pub struct SpriteAnimation {
+    pub timer: Timer,
+    pub first_frame: usize,
+    pub last_frame: usize,
+}
+
+impl SpriteAnimation {
+    pub fn new(fps: f32, first_frame: usize, last_frame: usize) -> Self {
+        Self {
+            timer: Timer::from_seconds(1.0 / fps, TimerMode::Repeating),
+            first_frame,
+            last_frame,
+        }
+    }
+}
+
 #[derive(Bundle)]
 pub struct WoozzleSprite {
     sprite: Sprite,
