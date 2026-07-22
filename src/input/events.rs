@@ -14,3 +14,6 @@ pub struct SpawnWoozle;
 
 #[derive(Event)]
 pub struct ChangeMajorJob;
+
+#[derive(Event)]
+pub struct OpenRadialMenu;

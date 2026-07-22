@@ -53,7 +53,7 @@ pub fn set_tile(
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    let tile_entity = commands.spawn(HexTile::new(hex, TerrainType::_Grass)).id();
+    let tile_entity = commands.spawn(HexTile::new(hex, TerrainType::Grass)).id();
 
     tile_data.entities.insert(hex, tile_entity);
     commands.trigger(DataUpdated);

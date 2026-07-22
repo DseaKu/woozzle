@@ -6,8 +6,8 @@ use strum_macros::EnumCount;
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, EnumCount)]
 pub enum TerrainType {
     _Empty,
-    _Grass,
-    Water,
+    Grass,
+    _Water,
     _Dirt,
 }
 impl TerrainType {

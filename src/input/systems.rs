@@ -3,6 +3,12 @@ use super::resources;
 use bevy::prelude::*;
 use bevy::window;
 
+pub fn send_open_radial_menu(mouse_input: Res<ButtonInput<MouseButton>>, mut commands: Commands) {
+    if mouse_input.pressed(MouseButton::Right) {
+        commands.trigger(events::OpenRadialMenu);
+    }
+}
+
 pub fn send_change_major_job_event(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut commands: Commands,
@@ -43,7 +49,7 @@ pub fn send_set_tile_event(mut commands: Commands, mouse_input: Res<ButtonInput<
 }
 
 pub fn send_remove_tile_event(mut commands: Commands, mouse_input: Res<ButtonInput<MouseButton>>) {
-    if mouse_input.just_pressed(MouseButton::Right) {
+    if mouse_input.just_pressed(MouseButton::Middle) {
         commands.trigger(events::RemoveTile);
     }
 }

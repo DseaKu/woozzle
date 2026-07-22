@@ -50,7 +50,9 @@ pub fn animate_sprites(
 ) {
     for (mut anim, mut sprite) in &mut query {
         anim.timer.tick(time.delta());
-        if anim.timer.just_finished() && let Some(atlas) = &mut sprite.texture_atlas {
+        if anim.timer.just_finished()
+            && let Some(atlas) = &mut sprite.texture_atlas
+        {
             if atlas.index < anim.first_frame || atlas.index >= anim.last_frame {
                 atlas.index = anim.first_frame;
             } else {
@@ -86,7 +88,7 @@ pub fn insert_tile_sprite(
     use super::components::{TileSprite, VisibleTileLabel};
     for tile in &visible_tiles.entities {
         commands.entity(*tile).insert((
-            TileSprite::new(&tile_assets, map::components::TerrainType::Water),
+            TileSprite::new(&tile_assets, map::components::TerrainType::Grass),
             VisibleTileLabel,
         ));
     }
