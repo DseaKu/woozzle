@@ -3,6 +3,7 @@ use super::resources;
 use bevy::prelude::*;
 use bevy::window;
 
+#[allow(dead_code)]
 pub fn send_open_radial_menu(mouse_input: Res<ButtonInput<MouseButton>>, mut commands: Commands) {
     if mouse_input.pressed(MouseButton::Right) {
         commands.trigger(events::OpenRadialMenu);

@@ -2,6 +2,7 @@ use crate::ui::radial_menu::RadialNode;
 use bevy::prelude::*;
 
 #[derive(Resource)]
+#[allow(dead_code)]
 pub struct RootRadialMenu {
     node: RadialNode,
 }

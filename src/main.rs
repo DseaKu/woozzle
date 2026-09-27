@@ -2,6 +2,7 @@ use avian2d::prelude::*;
 use bevy::{diagnostic::FrameTimeDiagnosticsPlugin, prelude::*, window::WindowMode};
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
+mod buildings;
 mod camera;
 mod diagnostic;
 mod graphics;
@@ -48,6 +49,7 @@ fn main() {
     .add_plugins(map::MapPlugin)
     .add_plugins(graphics::GraphicsPlugin)
     .add_plugins(woozzle::WoozzlePlugin)
+    .add_plugins(buildings::BuildingPlugin)
     .add_plugins(diagnostic::DiagnosticPlugin);
 
     // Third-Party Plugins
