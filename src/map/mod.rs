@@ -5,6 +5,7 @@ use crate::camera;
 pub mod bundles;
 pub mod components;
 pub mod events;
+pub mod hex;
 pub mod resources;
 mod systems;
 
@@ -15,7 +16,7 @@ impl Plugin for MapPlugin {
             .add_observer(systems::remove_tiles)
             .add_observer(systems::update_visible_tiles::<camera::events::VisibleHexesUpdated>)
             .add_observer(systems::update_visible_tiles::<events::DataUpdated>)
-            .init_resource::<resources::Data>()
-            .init_resource::<resources::Visible>();
+            .init_resource::<resources::TileEntities>()
+            .init_resource::<resources::VisibleTiles>();
     }
 }

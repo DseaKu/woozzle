@@ -62,7 +62,7 @@ pub fn animate_sprites(
 
 pub fn remove_tile_sprite(
     _trigger: On<map::events::VisibleUpdated>,
-    visible_tiles: Res<map::resources::Visible>,
+    visible_tiles: Res<map::resources::VisibleTiles>,
     mut commands: Commands,
     tile_query: Query<Entity, With<VisibleTileLabel>>,
 ) {
@@ -79,7 +79,7 @@ pub fn remove_tile_sprite(
 
 pub fn insert_tile_sprite(
     _trigger: On<map::events::VisibleUpdated>,
-    visible_tiles: Res<map::resources::Visible>,
+    visible_tiles: Res<map::resources::VisibleTiles>,
     mut commands: Commands,
     tile_assets: Res<resources::TilesetAsset>,
 ) {

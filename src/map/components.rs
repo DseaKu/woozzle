@@ -1,4 +1,4 @@
-use super::systems;
+use super::hex;
 use bevy::prelude::*;
 use strum::EnumCount;
 use strum_macros::EnumCount;
@@ -35,9 +35,9 @@ impl Hex {
         Self { q, r }
     }
     pub fn to_world(self) -> Vec2 {
-        systems::from_hex_to_world(self)
+        hex::from_hex_to_world(self)
     }
     pub fn from_world(pixel: Vec2) -> Hex {
-        systems::from_world_to_hex(pixel)
+        hex::from_world_to_hex(pixel)
     }
 }

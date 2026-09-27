@@ -54,11 +54,11 @@ pub fn update_woozzle_entity_text(
 pub fn update_tile_entity_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::TileEntityLabel>>,
-    tile_data: Res<map::resources::Data>,
-    visible_tiles: Res<map::resources::Visible>,
+    tile_entities: Res<map::resources::TileEntities>,
+    visible_tiles: Res<map::resources::VisibleTiles>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
-    let total = tile_data.entities.len();
+    let total = tile_entities.entities.len();
     let visible = visible_tiles.entities.len();
     **text = format!("Tiles: Total={}, Visible={}", total, visible).into();
 }
