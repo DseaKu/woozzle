@@ -5,7 +5,7 @@ use crate::camera;
 pub mod bundles;
 pub mod components;
 pub mod events;
-pub mod hex;
+pub mod hex_systems;
 pub mod resources;
 mod systems;
 

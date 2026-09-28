@@ -1,0 +1,150 @@
+
+  ### Step 1: Add Serialization Dependencies
+
+  In Cargo.toml, add serde and a format crate like serde_json (or ron):
+
+    [dependencies]
+    serde = { version = "1.0", features = ["derive"] }
+    serde_json = "1.0"
+
+  Derive Serialize and Deserialize on your data types in components.rs:
+
+    use serde::{Deserialize, Serialize};
+    
+    #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+    pub enum TerrainType {
+        _Empty,
+        Grass,
+        _Water,
+        _Dirt,
+    }
+    
+    #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+    pub struct Hex {
+        pub q: i32,
+        pub r: i32,
+    }
+
+    Side information:
+    Deserialization is the process of taking data stored as plain text or raw
+    bytes (such as from a file on disk or a network request) and reconstructing
+    it into live, typed data structures in memory (like Rust structs and enums).
+
+    Computer files cannot store actual running Rust objects or pointers—they only
+    store a flat sequence of bytes. Deserialization is the translation layer that
+    bridges raw stored bytes back into types your code and the compiler can work
+    with.
+
+
+
+
+
+  
+  ### Step 2: Define the Serializable Save Schema
+
+  Create a lightweight save struct (e.g. in src/map/save.rs or resources.rs):
+
+    use super::components::{Hex, TerrainType};
+    use serde::{Deserialize, Serialize};
+    
+    #[derive(Serialize, Deserialize, Default)]
+    pub struct MapSaveData {
+        pub tiles: Vec<(Hex, TerrainType)>,
+    }
+  ──────
+  ### Step 3: Implement Loading on Startup
+
+  Add a Startup system in systems.rs that checks for an existing save file:
+
+    use std::fs;
+    use std::path::Path;
+    
+    const SAVE_PATH: &str = "saves/map.json";
+    
+    pub fn load_or_create_map(
+        mut tile_entities: ResMut<TileEntities>,
+        mut commands: Commands,
+    ) {
+        let path = Path::new(SAVE_PATH);
+    
+        let save_data: MapSaveData = if path.exists() {
+            // 1. Load existing state
+            let content = fs::read_to_string(path).unwrap_or_default();
+            serde_json::from_str(&content).unwrap_or_default()
+        } else {
+            MapSaveData::default()
+        };
+    
+        if !save_data.tiles.is_empty() {
+            // 2. Restore saved tiles
+            for (hex, terrain) in save_data.tiles {
+                let entity = commands.spawn(HexTile::new(hex, terrain)).id();
+                tile_entities.entities.insert(hex, entity);
+            }
+        } else {
+            // 3. First time run: generate initial starter map
+            for q in -3..=3 {
+                for r in -3..=3 {
+                    let hex = Hex::new(q, r);
+                    let entity = commands.spawn(HexTile::new(hex, TerrainType::Grass)).id();
+                    tile_entities.entities.insert(hex, entity);
+                }
+            }
+            // Save initial state immediately
+            save_map_to_disk(&tile_entities, ...);
+        }
+    
+        // Trigger observers to calculate visible tiles and render sprites
+        commands.trigger(DataUpdated);
+    }
+  ──────
+  ### Step 4: Implement Saving on Map Changes
+
+  Because you already trigger DataUpdated whenever a tile is added (set_tile) or removed (remove_tiles),
+  you can attach an observer that auto-saves on change:
+
+  1. **Include Hex in HexTile** bundle so querying (&Hex, &TerrainType) is straightforward:
+    #[derive(Bundle)]
+    pub struct HexTile {
+        hex: Hex,
+        tile_type: TerrainType,
+        transform: Transform,
+    }
+
+  2. Auto-save system / observer:
+    pub fn auto_save_map(
+        _trigger: On<events::DataUpdated>,
+        tiles_q: Query<(&Hex, &TerrainType)>,
+    ) {
+        let save_data = MapSaveData {
+            tiles: tiles_q.iter().map(|(&hex, &terrain)| (hex, terrain)).collect(),
+        };
+
+        if let Ok(json) = serde_json::to_string_pretty(&save_data) {
+            let _ = std::fs::create_dir_all("saves");
+            let _ = std::fs::write(SAVE_PATH, json);
+        }
+    }
+
+  3. **Register in MapPlugin**:
+    app.add_systems(Startup, systems::load_or_create_map)
+       .add_observer(systems::auto_save_map);
+
+  ──────
+  ### Summary of Data Flow
+
+  │ Diagram exceeds terminal width (222 > 107 cols)
+  │ Displayed as code block. Widen terminal to view inline.
+
+    flowchart TD
+        A[Game Starts] --> B{Save file exists?}
+        B -- Yes --> C[Deserialize map.json & Spawn saved HexTiles]
+        B -- No --> D[Generate default starter tiles & Write map.json]
+        C --> E[Trigger DataUpdated event]
+        D --> E
+        E --> F[Render visible tiles]
+        
+        G[Player sets / removes tile] --> H[Trigger DataUpdated event]
+        H --> I[auto_save_map writes updated map.json]
+
+  Would you like me to implement this directly into the codebase?
