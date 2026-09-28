@@ -1,9 +1,10 @@
-use super::hex_systems;
+pub use super::hex::components::Hex;
 use bevy::prelude::*;
+use serde::{Deserialize, Serialize};
 use strum::EnumCount;
 use strum_macros::EnumCount;
 
-#[derive(Component, Debug, Clone, Copy, PartialEq, Eq, EnumCount)]
+#[derive(Component, Debug, Clone, Copy, PartialEq, Eq, EnumCount, Serialize, Deserialize)]
 pub enum TerrainType {
     _Empty,
     Grass,
@@ -22,22 +23,5 @@ impl TerrainType {
     }
     pub fn n_of_types() -> usize {
         TerrainType::COUNT
-    }
-}
-
-#[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct Hex {
-    pub q: i32,
-    pub r: i32,
-}
-impl Hex {
-    pub fn new(q: i32, r: i32) -> Self {
-        Self { q, r }
-    }
-    pub fn to_world(self) -> Vec2 {
-        hex_systems::from_hex_to_world(self)
-    }
-    pub fn from_world(pixel: Vec2) -> Hex {
-        hex_systems::from_world_to_hex(pixel)
     }
 }

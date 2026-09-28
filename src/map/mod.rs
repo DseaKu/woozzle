@@ -5,7 +5,7 @@ use crate::camera;
 pub mod bundles;
 pub mod components;
 pub mod events;
-pub mod hex_systems;
+pub mod hex;
 pub mod resources;
 mod systems;
 
@@ -13,6 +13,7 @@ pub struct MapPlugin;
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
         app.add_observer(systems::set_tile)
+            .add_plugins(hex::HexPlugin)
             .add_observer(systems::remove_tiles)
             .add_observer(systems::update_visible_tiles::<camera::events::VisibleHexesUpdated>)
             .add_observer(systems::update_visible_tiles::<events::DataUpdated>)
