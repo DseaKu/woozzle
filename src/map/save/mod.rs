@@ -5,5 +5,5 @@ mod systems;
 
 pub struct SavePlugin;
 impl Plugin for SavePlugin {
-    fn build(&self, app: &mut App) {}
+    fn build(&self, _app: &mut App) {}
 }

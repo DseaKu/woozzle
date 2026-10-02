@@ -1,4 +1,3 @@
-use crate::camera;
 use bevy::prelude::*;
 use bevy::time::common_conditions::on_timer;
 
@@ -30,11 +29,8 @@ impl Plugin for WoozzlePlugin {
                 systems::update_woozzle_hex_data
                     .run_if(on_timer(Duration::from_secs_f32(UPDATE_HEX_INTERVAL))),
             )
-            .init_resource::<resources::Visible>()
             .init_resource::<resources::MajorJobFlag>()
             .add_observer(systems::change_major_job)
-            .add_observer(systems::update_visible_woozzles::<events::DataUpdated>)
-            .add_observer(systems::update_visible_woozzles::<camera::events::VisibleHexesUpdated>)
             .add_observer(systems::set_woozle);
     }
 }

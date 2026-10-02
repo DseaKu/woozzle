@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-use crate::camera;
-
 pub mod bundles;
 pub mod components;
 pub mod events;
@@ -17,9 +15,6 @@ impl Plugin for MapPlugin {
             .add_plugins(hex::HexPlugin)
             .add_plugins(save::SavePlugin)
             .add_observer(systems::remove_tiles)
-            .add_observer(systems::update_visible_tiles::<camera::events::VisibleHexesUpdated>)
-            .add_observer(systems::update_visible_tiles::<events::DataUpdated>)
-            .init_resource::<resources::TileEntities>()
-            .init_resource::<resources::VisibleTiles>();
+            .init_resource::<resources::TileEntities>();
     }
 }

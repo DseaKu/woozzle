@@ -5,8 +5,3 @@ use bevy::{platform::collections::HashMap, prelude::*};
 pub struct TileEntities {
     pub entities: HashMap<Hex, Entity>,
 }
-
-#[derive(Resource, Default)]
-pub struct VisibleTiles {
-    pub entities: Vec<Entity>,
-}

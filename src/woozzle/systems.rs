@@ -7,7 +7,7 @@ use crate::jobs::major_jobs::wandering;
 use crate::woozzle;
 use crate::woozzle::components;
 use crate::woozzle::resources;
-use crate::{camera, input, map};
+use crate::{input, map};
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use std::cmp::Ordering;
@@ -58,17 +58,12 @@ pub fn update_sprite_facing(
     }
 }
 
-type VisibleWoozzleSpriteQuery<'a> = (
+type WoozzleSpriteQuery<'a> = (
     &'a mut crate::graphics::components::SpriteAnimation,
     Option<&'a GoToPoint>,
 );
 
-type VisibleWoozzleFilter = (
-    With<components::Woozzle>,
-    With<crate::graphics::components::VisibleLabel>,
-);
-
-pub fn update_sprite_running(mut query: Query<VisibleWoozzleSpriteQuery, VisibleWoozzleFilter>) {
+pub fn update_sprite_running(mut query: Query<WoozzleSpriteQuery, With<components::Woozzle>>) {
     for (mut anim, go_to_point) in &mut query {
         if go_to_point.is_some() {
             if anim.first_frame != 2 {
@@ -126,22 +121,4 @@ pub fn set_woozle(
         .push(woozzle_entity);
 
     commands.trigger(DataUpdated);
-}
-
-pub fn update_visible_woozzles<E: Event>(
-    _trigger: On<E>,
-    visible_hexes: Res<camera::resources::VisibleHexes>,
-    mut visible_woozzles: ResMut<Visible>,
-    woozzle_data: Res<Data>,
-    mut commands: Commands,
-) {
-    visible_woozzles.entities.clear();
-    for hex in &visible_hexes.tiles {
-        if let Some(woozzles_in_hex) = woozzle_data.entities.get(hex) {
-            for &woozzle_entity in woozzles_in_hex {
-                visible_woozzles.entities.push(woozzle_entity);
-            }
-        }
-    }
-    commands.trigger(VisibleUpdated);
 }

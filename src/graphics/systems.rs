@@ -1,52 +1,46 @@
 use super::components::*;
-use super::resources;
 use super::resources::*;
 use crate::map;
 use crate::woozzle;
 use bevy::prelude::*;
 
+// Bevy culls sprites outside the camera by itself, so every entity
+// gets its sprite once on spawn.
+
 pub fn insert_woozzle_sprite(
-    _trigger: On<woozzle::events::VisibleUpdated>,
-    visible_woozzles: Res<woozzle::resources::Visible>,
-    existing_sprites: Query<Entity, With<super::components::VisibleLabel>>,
+    add: On<Add, woozzle::components::Woozzle>,
     mut commands: Commands,
     woozzle_asset: Res<WoozzleAsset>,
 ) {
-    use super::components::{SpriteAnimation, VisibleLabel, WoozzleSprite};
-
-    for woozzle in &visible_woozzles.entities {
-        if existing_sprites.get(*woozzle).is_err() {
-            commands.entity(*woozzle).insert((
-                WoozzleSprite::new(&woozzle_asset),
-                SpriteAnimation::new(6.0, 0, 1),
-                VisibleLabel,
-            ));
-        }
-    }
+    commands.entity(add.entity).insert((
+        WoozzleSprite::new(&woozzle_asset),
+        SpriteAnimation::new(6.0, 0, 1),
+    ));
 }
-pub fn remove_woozzle_sprite(
-    _trigger: On<woozzle::events::VisibleUpdated>,
-    visible_woozzles: Res<woozzle::resources::Visible>,
-    mut commands: Commands,
-    woozzle_query: Query<Entity, With<VisibleLabel>>,
-) {
-    use super::components::{SpriteAnimation, VisibleLabel, WoozzleSprite};
 
-    for actual_visible_woozzle in woozzle_query {
-        if visible_woozzles.entities.contains(&actual_visible_woozzle) {
-            continue;
-        }
-        commands
-            .entity(actual_visible_woozzle)
-            .remove::<(WoozzleSprite, SpriteAnimation, VisibleLabel)>();
-    }
+pub fn insert_tile_sprite(
+    add: On<Add, map::components::TerrainType>,
+    tiles: Query<&map::components::TerrainType>,
+    mut commands: Commands,
+    tile_assets: Res<TilesetAsset>,
+) {
+    let Ok(terrain_type) = tiles.get(add.entity) else {
+        return;
+    };
+    commands
+        .entity(add.entity)
+        .insert(TileSprite::new(&tile_assets, *terrain_type));
 }
 
 pub fn animate_sprites(
     time: Res<Time>,
-    mut query: Query<(&mut SpriteAnimation, &mut Sprite), With<VisibleLabel>>,
+    mut query: Query<(&mut SpriteAnimation, &mut Sprite, &ViewVisibility)>,
 ) {
-    for (mut anim, mut sprite) in &mut query {
+    for (mut anim, mut sprite, view_visibility) in &mut query {
+        // Off screen sprites don't need to animate
+        if !view_visibility.get() {
+            continue;
+        }
         anim.timer.tick(time.delta());
         if anim.timer.just_finished()
             && let Some(atlas) = &mut sprite.texture_atlas
@@ -59,36 +53,3 @@ pub fn animate_sprites(
         }
     }
 }
-
-pub fn remove_tile_sprite(
-    _trigger: On<map::events::VisibleUpdated>,
-    visible_tiles: Res<map::resources::VisibleTiles>,
-    mut commands: Commands,
-    tile_query: Query<Entity, With<VisibleTileLabel>>,
-) {
-    use super::components::{TileSprite, VisibleTileLabel};
-    for actual_visible_tiles in tile_query {
-        if visible_tiles.entities.contains(&actual_visible_tiles) {
-            continue;
-        }
-        commands
-            .entity(actual_visible_tiles)
-            .remove::<(TileSprite, VisibleTileLabel)>();
-    }
-}
-
-pub fn insert_tile_sprite(
-    _trigger: On<map::events::VisibleUpdated>,
-    visible_tiles: Res<map::resources::VisibleTiles>,
-    mut commands: Commands,
-    tile_assets: Res<resources::TilesetAsset>,
-) {
-    use super::components::{TileSprite, VisibleTileLabel};
-    for tile in &visible_tiles.entities {
-        commands.entity(*tile).insert((
-            TileSprite::new(&tile_assets, map::components::TerrainType::Grass),
-            VisibleTileLabel,
-        ));
-    }
-}
-

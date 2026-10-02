@@ -55,9 +55,3 @@ impl TileSprite {
         }
     }
 }
-
-#[derive(Component)]
-pub struct VisibleLabel;
-
-#[derive(Component)]
-pub struct VisibleTileLabel;

@@ -52,7 +52,7 @@ pub fn wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
                 let duration = rand::random_range(0.0..MAX_WAIT_DURATION);
                 action_queue.0.push_back(Action::Wait(duration));
             }
-            _ => {} // 0: Do nothing (33% chance to pause planning)
+            _ => {} // 9: Do nothing (10% chance to pause planning)
         }
     }
 }

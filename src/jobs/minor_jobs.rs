@@ -24,11 +24,11 @@ pub fn wait(
 }
 
 pub fn ghost_system(
-    mut query: Query<(Entity, &mut GhostMode, &mut MoveSpeed)>,
+    mut query: Query<(Entity, &mut GhostMode)>,
     time: Res<Time>,
     mut commands: Commands,
 ) {
-    for (entity, mut ghost, mut move_speed) in &mut query {
+    for (entity, mut ghost) in &mut query {
         ghost.0 -= time.delta_secs();
 
         // End ghost mode
@@ -37,7 +37,6 @@ pub fn ghost_system(
                 .entity(entity)
                 .remove::<GhostMode>()
                 .insert(Collider::circle(COLLSION_RADIUS));
-            move_speed.0 /= GHOST_SPEED_FACTOR;
         }
     }
 }
@@ -46,7 +45,8 @@ type MoverQuery<'a> = (
     Entity,
     &'a GoToPoint,
     &'a mut Transform,
-    &'a mut MoveSpeed,
+    &'a MoveSpeed,
+    Option<&'a GhostMode>,
     &'a mut LinearVelocity,
     &'a CollidingEntities,
     &'a mut CollisionCounter,
@@ -60,7 +60,8 @@ pub fn go_to_point(
         woozzle,
         go_to_point,
         mut transform,
-        mut move_speed,
+        move_speed,
+        ghost_mode,
         mut velocity,
         collision,
         mut collision_counter,
@@ -77,7 +78,12 @@ pub fn go_to_point(
         let cur_pos = transform.translation.truncate();
         let direction = dst_pos - cur_pos;
         let distance = direction.length();
-        let step_size = move_speed.0 * time.delta_secs();
+        // Derive the speed from the base speed, so ghosting can't drift it
+        let speed = match ghost_mode {
+            Some(_) => move_speed.0 * GHOST_SPEED_FACTOR,
+            None => move_speed.0,
+        };
+        let step_size = speed * time.delta_secs();
 
         // Increase arrival_tolerance by the collision_counter
         let progress = (collision_counter.0 as f32 / COLLISION_MAX as f32).clamp(0.0, 1.0);
@@ -104,15 +110,17 @@ pub fn go_to_point(
 
         // Collision logic: Micro Ghost first, then Ghost Mode
         if !collision.is_empty() {
+            let previous_count = collision_counter.0;
             collision_counter.0 += COLLISION_STEP_SIZE;
 
-            // Try micro ghost step
-            if collision_counter.0 == MICRO_GHOST_THRESHOLD {
+            // Try micro ghost step, when the counter crosses the threshold
+            if previous_count < MICRO_GHOST_THRESHOLD
+                && collision_counter.0 >= MICRO_GHOST_THRESHOLD
+            {
                 commands
                     .entity(woozzle)
                     .remove::<Collider>()
                     .insert(GhostMode(MICRO_GHOST_DURATION));
-                move_speed.0 *= GHOST_SPEED_FACTOR;
             }
 
             // Turn into Ghost Mode if still stuck
@@ -121,14 +129,13 @@ pub fn go_to_point(
                     .entity(woozzle)
                     .remove::<Collider>()
                     .insert(GhostMode(GHOST_DURATION));
-                move_speed.0 *= GHOST_SPEED_FACTOR;
                 collision_counter.0 = 0;
             }
         } else {
             collision_counter.0 = collision_counter.0.saturating_sub(1);
         }
 
-        let target_velocity = direction.normalize() * move_speed.0;
+        let target_velocity = direction.normalize() * speed;
 
         // Smoothly steer towards the target
         velocity.0 = velocity.0.lerp(target_velocity, 5.0 * time.delta_secs());

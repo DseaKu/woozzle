@@ -42,24 +42,22 @@ pub fn show_debug_ui(
 pub fn update_woozzle_entity_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::WoozzleEntityLabel>>,
-    woozzle_data: Res<woozzle::resources::Data>,
-    visible_woozzles: Res<woozzle::resources::Visible>,
+    woozzles: Query<&ViewVisibility, With<woozzle::components::Woozzle>>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
-    let total: usize = woozzle_data.entities.values().map(|v| v.len()).sum();
-    let visible = visible_woozzles.entities.len();
+    let total = woozzles.iter().len();
+    let visible = woozzles.iter().filter(|v| v.get()).count();
     **text = format!("Woozles: Total={}, Visible={}", total, visible).into();
 }
 
 pub fn update_tile_entity_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::TileEntityLabel>>,
-    tile_entities: Res<map::resources::TileEntities>,
-    visible_tiles: Res<map::resources::VisibleTiles>,
+    tiles: Query<&ViewVisibility, With<map::components::TerrainType>>,
 ) {
     crate::guard_update!(debug_ui_state.is_enabled);
-    let total = tile_entities.entities.len();
-    let visible = visible_tiles.entities.len();
+    let total = tiles.iter().len();
+    let visible = tiles.iter().filter(|v| v.get()).count();
     **text = format!("Tiles: Total={}, Visible={}", total, visible).into();
 }
 
@@ -77,30 +75,36 @@ pub fn update_camera_center_text(
     mut text: Single<&mut Text, With<components::CameraCenterLabel>>,
     player_view: Res<camera::resources::PlayerView>,
 ) {
-    crate::guard_update!(debug_ui_state.is_changed() || player_view.is_changed());
+    crate::guard_update!(
+        debug_ui_state.is_enabled && (debug_ui_state.is_changed() || player_view.is_changed())
+    );
     **text = format!(
-        "Top Left={:.0}, Center={:.0}",
-        player_view.top_left, player_view.center
+        "Top Left={:.0}, Bot Right={:.0}, Center={:.0}",
+        player_view.top_left, player_view.bot_right, player_view.center
     )
     .into();
 }
 
-pub fn update_mouse_world_pos_text(
+pub fn update_mouse_hex_pos_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::MouseHexPosTextLabel>>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
-    crate::guard_update!(debug_ui_state.is_enabled || mouse_pos.is_changed());
+    crate::guard_update!(
+        debug_ui_state.is_enabled && (debug_ui_state.is_changed() || mouse_pos.is_changed())
+    );
     let pos = map::components::Hex::from_world(mouse_pos.world);
     **text = format!("Hex q={}, r={}", pos.q, pos.r).into();
 }
 
-pub fn update_mouse_hex_pos_text(
+pub fn update_mouse_world_pos_text(
     debug_ui_state: Res<resources::DebugUiState>,
     mut text: Single<&mut Text, With<components::MouseWorldPosTextLabel>>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
-    crate::guard_update!(debug_ui_state.is_enabled || mouse_pos.is_changed());
+    crate::guard_update!(
+        debug_ui_state.is_enabled && (debug_ui_state.is_changed() || mouse_pos.is_changed())
+    );
     let pos = mouse_pos.world;
     **text = format!("World x={:.2}, y={:.2}", pos.x, pos.y).into();
 }

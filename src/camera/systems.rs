@@ -1,12 +1,8 @@
 use super::events::*;
 use super::resources;
-use super::resources::*;
-use crate::map;
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
 const ZOOM: f32 = 10.0;
-// const CULLING_FACTOR: f32 = -0.80;
-const CULLING_FACTOR: f32 = 0.01;
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;
@@ -87,8 +83,8 @@ pub fn update_player_view(
         return;
     };
 
-    let half_width = (viewport_size.x / 2.0) * (1.0 + CULLING_FACTOR) * current_scale;
-    let half_height = (viewport_size.y / 2.0) * (1.0 + CULLING_FACTOR) * current_scale;
+    let half_width = (viewport_size.x / 2.0) * current_scale;
+    let half_height = (viewport_size.y / 2.0) * current_scale;
 
     let new_top_left = new_center - Vec2::new(half_width, half_height);
     let new_bottom_right = new_center + Vec2::new(half_width, half_height);
@@ -102,46 +98,4 @@ pub fn update_player_view(
     };
 
     commands.trigger(PlayerViewUpdated);
-}
-
-pub fn update_viewport_hexes(
-    _trigger: On<PlayerViewUpdated>,
-    mut visible_hexes: ResMut<VisibleHexes>,
-    player_view: Res<PlayerView>,
-    mut commands: Commands,
-) {
-    use map::components::Hex;
-
-    // Check all 4 corners to find the true min/max of the slanted hex grid
-    let top_left = player_view.top_left;
-    let bot_right = player_view.bot_right;
-    let top_right = Vec2::new(bot_right.x, top_left.y);
-    let bot_left = Vec2::new(top_left.x, bot_right.y);
-
-    let corners = [
-        Hex::from_world(top_left),
-        Hex::from_world(bot_right),
-        Hex::from_world(top_right),
-        Hex::from_world(bot_left),
-    ];
-
-    let mut min_q = i32::MAX;
-    let mut max_q = i32::MIN;
-    let mut min_r = i32::MAX;
-    let mut max_r = i32::MIN;
-
-    for hex in &corners {
-        min_q = min_q.min(hex.q);
-        max_q = max_q.max(hex.q);
-        min_r = min_r.min(hex.r);
-        max_r = max_r.max(hex.r);
-    }
-
-    visible_hexes.tiles.clear();
-    for q in (min_q - 1)..=(max_q + 1) {
-        for r in (min_r - 1)..=(max_r + 1) {
-            visible_hexes.tiles.push(Hex::new(q, r));
-        }
-    }
-    commands.trigger(VisibleHexesUpdated);
 }

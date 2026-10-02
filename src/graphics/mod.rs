@@ -11,9 +11,7 @@ impl Plugin for GraphicsPlugin {
         app.add_systems(Startup, loader::load_tileset_assets)
             .add_systems(Startup, loader::load_woozzle_assets)
             .add_systems(Update, systems::animate_sprites)
-            .add_observer(systems::remove_tile_sprite)
             .add_observer(systems::insert_tile_sprite)
-            .add_observer(systems::remove_woozzle_sprite)
             .add_observer(systems::insert_woozzle_sprite)
             .init_resource::<resources::WoozzleAsset>()
             .init_resource::<resources::TilesetAsset>();
