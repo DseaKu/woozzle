@@ -14,7 +14,7 @@ pub const SQRT_3: f32 = 1.732_050_8;
 pub const TWO_THIRDS: f32 = 2.0 / 3.0;
 pub const THREE_HALVES: f32 = 3.0 / 2.0;
 
-pub fn from_hex_to_world(hex: Hex) -> Vec2 {
+pub fn hex_to_world(hex: Hex) -> Vec2 {
     let q = hex.q as f32;
     let r = hex.r as f32;
 
@@ -25,7 +25,7 @@ pub fn from_hex_to_world(hex: Hex) -> Vec2 {
     Vec2::new(x.round(), y.round())
 }
 
-pub fn from_world_to_hex(pixel: Vec2) -> Hex {
+pub fn world_to_hex(pixel: Vec2) -> Hex {
     let px = pixel.x / HEX_WIDTH;
     let py = pixel.y / HEX_HEIGHT;
 

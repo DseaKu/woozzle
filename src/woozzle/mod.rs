@@ -9,28 +9,28 @@ mod systems;
 
 use std::time::Duration;
 
-const FACE_DIR_INTERVAL: f32 = 0.3;
-const UPDATE_HEX_INTERVAL: f32 = 0.3; // The function runs through every woozzle
+const FACING_UPDATE_INTERVAL: f32 = 0.3;
+const WOOZZLES_BY_HEX_INTERVAL: f32 = 0.3; // The function runs through every woozzle
 
 pub struct WoozzlePlugin;
 impl Plugin for WoozzlePlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<resources::Data>()
-            .add_systems(Update, systems::get_a_job)
-            .add_systems(Update, systems::update_sprite_facing)
-            .add_systems(Update, systems::update_sprite_running)
+        app.init_resource::<resources::WoozzlesByHex>()
+            .add_systems(Update, systems::assign_job)
+            .add_systems(Update, systems::update_facing)
+            .add_systems(Update, systems::update_walk_animation)
             .add_systems(
                 Update,
-                systems::mark_all_face_dir_dirty
-                    .run_if(on_timer(Duration::from_secs_f32(FACE_DIR_INTERVAL))),
+                systems::request_facing_updates
+                    .run_if(on_timer(Duration::from_secs_f32(FACING_UPDATE_INTERVAL))),
             )
             .add_systems(
                 Update,
-                systems::update_woozzle_hex_data
-                    .run_if(on_timer(Duration::from_secs_f32(UPDATE_HEX_INTERVAL))),
+                systems::rebuild_woozzles_by_hex
+                    .run_if(on_timer(Duration::from_secs_f32(WOOZZLES_BY_HEX_INTERVAL))),
             )
-            .init_resource::<resources::MajorJobFlag>()
-            .add_observer(systems::change_major_job)
-            .add_observer(systems::set_woozle);
+            .init_resource::<resources::JobMode>()
+            .add_observer(systems::toggle_job_mode)
+            .add_observer(systems::spawn_woozzle);
     }
 }

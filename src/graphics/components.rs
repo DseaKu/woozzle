@@ -25,12 +25,12 @@ pub struct WoozzleSprite {
 }
 
 impl WoozzleSprite {
-    pub fn new(assets: &WoozzleAsset) -> Self {
+    pub fn new(atlas: &WoozzleAtlas) -> Self {
         Self {
             sprite: Sprite::from_atlas_image(
-                assets.image.clone(),
+                atlas.image.clone(),
                 TextureAtlas {
-                    layout: assets.layout.clone(),
+                    layout: atlas.layout.clone(),
                     index: 0,
                 },
             ),
@@ -43,12 +43,12 @@ pub struct TileSprite {
     sprite: Sprite,
 }
 impl TileSprite {
-    pub fn new(assets: &TilesetAsset, terrain_type: map::components::TerrainType) -> Self {
+    pub fn new(atlas: &TilesetAtlas, terrain_type: map::components::TerrainType) -> Self {
         Self {
             sprite: Sprite::from_atlas_image(
-                assets.image.clone(),
+                atlas.image.clone(),
                 TextureAtlas {
-                    layout: assets.layout.clone(),
+                    layout: atlas.layout.clone(),
                     index: terrain_type.to_atlas_index(),
                 },
             ),

@@ -1,4 +1,4 @@
-use super::systems;
+use super::conversion;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -12,9 +12,9 @@ impl Hex {
         Self { q, r }
     }
     pub fn to_world(self) -> Vec2 {
-        systems::from_hex_to_world(self)
+        conversion::hex_to_world(self)
     }
     pub fn from_world(pixel: Vec2) -> Hex {
-        systems::from_world_to_hex(pixel)
+        conversion::world_to_hex(pixel)
     }
 }

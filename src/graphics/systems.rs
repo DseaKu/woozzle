@@ -10,10 +10,10 @@ use bevy::prelude::*;
 pub fn insert_woozzle_sprite(
     add: On<Add, woozzle::components::Woozzle>,
     mut commands: Commands,
-    woozzle_asset: Res<WoozzleAsset>,
+    woozzle_atlas: Res<WoozzleAtlas>,
 ) {
     commands.entity(add.entity).insert((
-        WoozzleSprite::new(&woozzle_asset),
+        WoozzleSprite::new(&woozzle_atlas),
         SpriteAnimation::new(6.0, 0, 1),
     ));
 }
@@ -22,14 +22,14 @@ pub fn insert_tile_sprite(
     add: On<Add, map::components::TerrainType>,
     tiles: Query<&map::components::TerrainType>,
     mut commands: Commands,
-    tile_assets: Res<TilesetAsset>,
+    tileset_atlas: Res<TilesetAtlas>,
 ) {
     let Ok(terrain_type) = tiles.get(add.entity) else {
         return;
     };
     commands
         .entity(add.entity)
-        .insert(TileSprite::new(&tile_assets, *terrain_type));
+        .insert(TileSprite::new(&tileset_atlas, *terrain_type));
 }
 
 pub fn animate_sprites(

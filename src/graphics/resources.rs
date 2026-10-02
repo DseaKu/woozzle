@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
 #[derive(Resource, Default)]
-pub struct TilesetAsset {
+pub struct TilesetAtlas {
     pub image: Handle<Image>,
     pub layout: Handle<TextureAtlasLayout>,
 }
 
 #[derive(Resource, Default)]
-pub struct WoozzleAsset {
+pub struct WoozzleAtlas {
     pub image: Handle<Image>,
     pub layout: Handle<TextureAtlasLayout>,
 }

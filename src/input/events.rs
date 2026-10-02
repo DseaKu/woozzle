@@ -4,16 +4,16 @@ use bevy::prelude::*;
 pub struct ToggleDebugUi;
 
 #[derive(Event)]
-pub struct SetTile;
+pub struct PlaceTile;
 
 #[derive(Event)]
 pub struct RemoveTile;
 
 #[derive(Event)]
-pub struct SpawnWoozle;
+pub struct SpawnWoozzle;
 
 #[derive(Event)]
-pub struct ChangeMajorJob;
+pub struct ToggleJobMode;
 
 #[derive(Event)]
 pub struct OpenRadialMenu;

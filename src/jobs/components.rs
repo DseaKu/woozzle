@@ -5,7 +5,7 @@ use std::collections::VecDeque;
 pub struct GoToPoint {
     pub target: Vec2,
     pub arrival_tolerance: f32,
-    pub reset_counter_on_arrival: bool,
+    pub reset_stuck_on_arrival: bool,
 }
 
 #[derive(Component)]
@@ -17,7 +17,7 @@ pub enum Action {
     GoToPoint {
         target: Vec2,
         arrival_tolerance: f32,
-        reset_counter_on_arrival: bool,
+        reset_stuck_on_arrival: bool,
     },
     Wait(f32),
 }
@@ -26,7 +26,7 @@ pub enum Action {
 pub struct ActionQueue(pub VecDeque<Action>);
 
 #[derive(Component)]
-pub struct JobLess;
+pub struct Idle;
 
 #[derive(Component)]
 pub struct Busy;

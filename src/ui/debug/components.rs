@@ -5,33 +5,33 @@ const TOP_MARGIN: f32 = 20.0;
 const INDENTED_MARGIN: f32 = 30.0;
 
 #[derive(Component)]
-pub struct RootNodeLabel;
+pub struct DebugUiRoot;
 
 #[derive(Component)]
 pub struct FpsLabel;
 
 #[derive(Component)]
-pub struct MouseWorldPosTextLabel;
+pub struct MouseWorldPosLabel;
 
 #[derive(Component)]
-pub struct MouseHexPosTextLabel;
+pub struct MouseHexPosLabel;
 
 #[derive(Component)]
-pub struct CameraCenterLabel;
+pub struct CameraViewLabel;
 
 #[derive(Component)]
-pub struct TileEntityLabel;
+pub struct TileCountLabel;
 
 #[derive(Component)]
-pub struct WoozzleEntityLabel;
+pub struct WoozzleCountLabel;
 
 #[derive(Bundle)]
-pub struct RootNodeBundle {
+pub struct DebugUiRootBundle {
     node: Node,
-    label: RootNodeLabel,
+    label: DebugUiRoot,
 }
 
-impl RootNodeBundle {
+impl DebugUiRootBundle {
     pub fn new() -> Self {
         Self {
             node: Node {
@@ -41,18 +41,18 @@ impl RootNodeBundle {
                 flex_direction: FlexDirection::Column,
                 ..default()
             },
-            label: RootNodeLabel,
+            label: DebugUiRoot,
         }
     }
 }
 
 #[derive(Bundle)]
-pub struct ContainerNode {
+pub struct SectionHeader {
     text: Text,
     node: Node,
 }
 
-impl ContainerNode {
+impl SectionHeader {
     pub fn new(text: &str) -> Self {
         Self {
             text: Text::new(text),
@@ -65,12 +65,12 @@ impl ContainerNode {
 }
 
 #[derive(Bundle)]
-pub struct ItemText<L: Component> {
+pub struct SectionItem<L: Component> {
     text: Text,
     node: Node,
     label: L,
 }
-impl<L: Component> ItemText<L> {
+impl<L: Component> SectionItem<L> {
     pub fn new(label: L) -> Self {
         Self {
             text: Text::default(),

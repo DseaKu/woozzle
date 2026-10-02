@@ -1,16 +1,16 @@
-use crate::woozzle::components::DirtyFaceDir;
+use crate::woozzle::components::NeedsFacingUpdate;
 
 use super::components::*;
 use bevy::prelude::*;
 
-pub fn process_job(
+pub fn start_next_action(
     mut woozzle_action_queues: Query<(Entity, &mut ActionQueue), Without<Busy>>,
     mut commands: Commands,
 ) {
     for (woozzle, mut action_queue) in &mut woozzle_action_queues {
         // Mark jobless Woozzles, so that it can be filtered out afterwards and assign a new job
         if action_queue.0.is_empty() {
-            commands.entity(woozzle).insert(JobLess);
+            commands.entity(woozzle).insert(Idle);
             continue;
         }
 
@@ -21,12 +21,12 @@ pub fn process_job(
             Action::GoToPoint {
                 target,
                 arrival_tolerance,
-                reset_counter_on_arrival,
+                reset_stuck_on_arrival,
             } => {
                 commands.entity(woozzle).insert(GoToPoint {
                     target,
                     arrival_tolerance,
-                    reset_counter_on_arrival,
+                    reset_stuck_on_arrival,
                 });
             }
             Action::Wait(time) => {
@@ -35,6 +35,6 @@ pub fn process_job(
         }
 
         // Mark for updating face dir
-        commands.entity(woozzle).insert(DirtyFaceDir);
+        commands.entity(woozzle).insert(NeedsFacingUpdate);
     }
 }

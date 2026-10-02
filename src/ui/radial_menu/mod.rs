@@ -13,16 +13,17 @@ impl Plugin for RadialMenuPlugin {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Clone)]
 pub enum RadialAction {
-    _AssignRectanglePatrol,
-    _AssignWandering,
-    _SpawnSingleWoozzle,
-    _SpawnManyWoozzle,
-    _ToggleDebugUi,
-    _SetTile,
-    _SelectTile,
-    _RemoveTile,
+    AssignRectanglePatrol,
+    AssignWandering,
+    SpawnSingleWoozzle,
+    SpawnManyWoozzle,
+    ToggleDebugUi,
+    PlaceTile,
+    SelectTile,
+    RemoveTile,
 }
 
 #[allow(dead_code)]

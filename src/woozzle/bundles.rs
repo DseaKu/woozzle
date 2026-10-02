@@ -1,14 +1,14 @@
-use crate::woozzle::components::{CollisionCounter, MoveSpeed};
+use crate::woozzle::components::{MoveSpeed, StuckCounter};
 use crate::{graphics, jobs::components::ActionQueue};
 
 const BASE_SPEED: f32 = 150.0;
-pub const COLLSION_RADIUS: f32 = 5.5;
+pub const COLLISION_RADIUS: f32 = 5.5;
 
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
 #[derive(Bundle)]
-pub struct Woozzle {
+pub struct WoozzleBundle {
     label: super::components::Woozzle,
     transform: Transform,
     action_queue: ActionQueue,
@@ -17,21 +17,21 @@ pub struct Woozzle {
     collider: Collider,
     locked_axes: LockedAxes, // Disable spinning when colliding
     colliding_entities: CollidingEntities,
-    collsion_counter: CollisionCounter,
+    stuck_counter: StuckCounter,
 }
 
-impl Woozzle {
+impl WoozzleBundle {
     pub fn new(pos: Vec2) -> Self {
         Self {
             label: super::components::Woozzle,
-            transform: Transform::from_xyz(pos.x, pos.y, graphics::DrawOrder::OnGround.as_f32()),
+            transform: Transform::from_xyz(pos.x, pos.y, graphics::DrawOrder::OnGround.z()),
             action_queue: ActionQueue::default(),
             speed: MoveSpeed(BASE_SPEED),
             rigid_body: RigidBody::Dynamic,
-            collider: Collider::circle(COLLSION_RADIUS),
+            collider: Collider::circle(COLLISION_RADIUS),
             locked_axes: LockedAxes::ROTATION_LOCKED,
             colliding_entities: CollidingEntities::default(),
-            collsion_counter: CollisionCounter::default(),
+            stuck_counter: StuckCounter::default(),
         }
     }
 }

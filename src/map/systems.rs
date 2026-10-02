@@ -5,31 +5,33 @@ use super::resources::*;
 use crate::input;
 use bevy::prelude::*;
 
-pub fn remove_tiles(
+pub fn remove_tile(
     _trigger: On<input::events::RemoveTile>,
-    mut tile_entities: ResMut<TileEntities>,
+    mut tiles_by_hex: ResMut<TilesByHex>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    if let Some(tile_entity) = tile_entities.entities.remove(&hex) {
-        commands.entity(tile_entity).despawn();
+    if let Some(new_tile) = tiles_by_hex.entities.remove(&hex) {
+        commands.entity(new_tile).despawn();
     }
-    commands.trigger(DataUpdated);
+    commands.trigger(TilesChanged);
 }
 
-pub fn set_tile(
-    _trigger: On<input::events::SetTile>,
-    mut tile_entities: ResMut<TileEntities>,
+pub fn place_tile(
+    _trigger: On<input::events::PlaceTile>,
+    mut tiles_by_hex: ResMut<TilesByHex>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
     let hex = Hex::from_world(mouse_pos.world);
-    let tile_entity = commands.spawn(HexTile::new(hex, TerrainType::Grass)).id();
+    let new_tile = commands
+        .spawn(TileBundle::new(hex, TerrainType::Grass))
+        .id();
 
     // Replace an already existing tile, instead of leaking it
-    if let Some(old_tile_entity) = tile_entities.entities.insert(hex, tile_entity) {
-        commands.entity(old_tile_entity).despawn();
+    if let Some(old_tile) = tiles_by_hex.entities.insert(hex, new_tile) {
+        commands.entity(old_tile).despawn();
     }
-    commands.trigger(DataUpdated);
+    commands.trigger(TilesChanged);
 }

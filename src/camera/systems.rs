@@ -2,7 +2,7 @@ use super::events::*;
 use super::resources;
 use bevy::{input::mouse::MouseWheel, prelude::*};
 
-const ZOOM: f32 = 10.0;
+const INITIAL_ZOOM: f32 = 10.0;
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;
@@ -59,7 +59,7 @@ pub fn spawn_camera(mut commands: Commands) {
         Camera2d,
         Msaa::Off,
         Projection::Orthographic(OrthographicProjection {
-            scale: 1. / ZOOM,
+            scale: 1. / INITIAL_ZOOM,
             ..OrthographicProjection::default_2d()
         }),
     ));
@@ -86,14 +86,14 @@ pub fn update_player_view(
     let half_width = (viewport_size.x / 2.0) * current_scale;
     let half_height = (viewport_size.y / 2.0) * current_scale;
 
-    let new_top_left = new_center - Vec2::new(half_width, half_height);
-    let new_bottom_right = new_center + Vec2::new(half_width, half_height);
+    let new_min = new_center - Vec2::new(half_width, half_height);
+    let new_max = new_center + Vec2::new(half_width, half_height);
 
-    crate::guard_update!(player_view.center != new_center || player_view.top_left != new_top_left);
+    crate::return_unless!(player_view.center != new_center || player_view.min != new_min);
 
     *player_view = resources::PlayerView {
-        top_left: new_top_left,
-        bot_right: new_bottom_right,
+        min: new_min,
+        max: new_max,
         center: new_center,
     };
 

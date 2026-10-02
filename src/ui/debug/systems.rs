@@ -10,21 +10,21 @@ pub fn show_debug_ui(
 ) {
     use components::*;
     commands
-        .spawn(RootNodeBundle::new())
+        .spawn(DebugUiRootBundle::new())
         .with_children(|builder| {
-            builder.spawn(ContainerNode::new("System:"));
-            builder.spawn(ItemText::new(FpsLabel));
+            builder.spawn(SectionHeader::new("System:"));
+            builder.spawn(SectionItem::new(FpsLabel));
 
-            builder.spawn(ContainerNode::new("Mouse Position:"));
-            builder.spawn(ItemText::new(MouseWorldPosTextLabel));
-            builder.spawn(ItemText::new(MouseHexPosTextLabel));
+            builder.spawn(SectionHeader::new("Mouse Position:"));
+            builder.spawn(SectionItem::new(MouseWorldPosLabel));
+            builder.spawn(SectionItem::new(MouseHexPosLabel));
 
-            builder.spawn(ContainerNode::new("Camera:"));
-            builder.spawn(ItemText::new(CameraCenterLabel));
+            builder.spawn(SectionHeader::new("Camera:"));
+            builder.spawn(SectionItem::new(CameraViewLabel));
 
-            builder.spawn(ContainerNode::new("Entites:"));
-            builder.spawn(ItemText::new(TileEntityLabel));
-            builder.spawn(ItemText::new(WoozzleEntityLabel));
+            builder.spawn(SectionHeader::new("Entities:"));
+            builder.spawn(SectionItem::new(TileCountLabel));
+            builder.spawn(SectionItem::new(WoozzleCountLabel));
         });
     debug_ui_state.is_enabled = true;
 }
@@ -32,30 +32,30 @@ pub fn show_debug_ui(
 //     debug_ui_state: Res<resources::DebugUiState>,
 //     mut text: Single<&mut Text, With<components::XXXLabel>>,
 // ) {
-//     crate::guard_update!(debug_ui_state.is_enabled);
+//     crate::return_unless!(debug_ui_state.is_enabled);
 // **text = format!(
 //     "Top Left= {}, Center: {}",
-//     player_view.top_left, player_view.center
+//     player_view.min, player_view.center
 // )
 // .into();
 // }
-pub fn update_woozzle_entity_text(
+pub fn update_woozzle_count_text(
     debug_ui_state: Res<resources::DebugUiState>,
-    mut text: Single<&mut Text, With<components::WoozzleEntityLabel>>,
+    mut text: Single<&mut Text, With<components::WoozzleCountLabel>>,
     woozzles: Query<&ViewVisibility, With<woozzle::components::Woozzle>>,
 ) {
-    crate::guard_update!(debug_ui_state.is_enabled);
+    crate::return_unless!(debug_ui_state.is_enabled);
     let total = woozzles.iter().len();
     let visible = woozzles.iter().filter(|v| v.get()).count();
-    **text = format!("Woozles: Total={}, Visible={}", total, visible).into();
+    **text = format!("Woozzles: Total={}, Visible={}", total, visible).into();
 }
 
-pub fn update_tile_entity_text(
+pub fn update_tile_count_text(
     debug_ui_state: Res<resources::DebugUiState>,
-    mut text: Single<&mut Text, With<components::TileEntityLabel>>,
+    mut text: Single<&mut Text, With<components::TileCountLabel>>,
     tiles: Query<&ViewVisibility, With<map::components::TerrainType>>,
 ) {
-    crate::guard_update!(debug_ui_state.is_enabled);
+    crate::return_unless!(debug_ui_state.is_enabled);
     let total = tiles.iter().len();
     let visible = tiles.iter().filter(|v| v.get()).count();
     **text = format!("Tiles: Total={}, Visible={}", total, visible).into();
@@ -66,31 +66,31 @@ pub fn update_fps_text(
     mut text: Single<&mut Text, With<components::FpsLabel>>,
     fps: Res<diagnostic::Fps>,
 ) {
-    crate::guard_update!(debug_ui_state.is_enabled);
+    crate::return_unless!(debug_ui_state.is_enabled);
     **text = format!("Fps= {:.0}", fps.value).into();
 }
 
-pub fn update_camera_center_text(
+pub fn update_camera_view_text(
     debug_ui_state: Res<resources::DebugUiState>,
-    mut text: Single<&mut Text, With<components::CameraCenterLabel>>,
+    mut text: Single<&mut Text, With<components::CameraViewLabel>>,
     player_view: Res<camera::resources::PlayerView>,
 ) {
-    crate::guard_update!(
+    crate::return_unless!(
         debug_ui_state.is_enabled && (debug_ui_state.is_changed() || player_view.is_changed())
     );
     **text = format!(
-        "Top Left={:.0}, Bot Right={:.0}, Center={:.0}",
-        player_view.top_left, player_view.bot_right, player_view.center
+        "Min={:.0}, Max={:.0}, Center={:.0}",
+        player_view.min, player_view.max, player_view.center
     )
     .into();
 }
 
 pub fn update_mouse_hex_pos_text(
     debug_ui_state: Res<resources::DebugUiState>,
-    mut text: Single<&mut Text, With<components::MouseHexPosTextLabel>>,
+    mut text: Single<&mut Text, With<components::MouseHexPosLabel>>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
-    crate::guard_update!(
+    crate::return_unless!(
         debug_ui_state.is_enabled && (debug_ui_state.is_changed() || mouse_pos.is_changed())
     );
     let pos = map::components::Hex::from_world(mouse_pos.world);
@@ -99,10 +99,10 @@ pub fn update_mouse_hex_pos_text(
 
 pub fn update_mouse_world_pos_text(
     debug_ui_state: Res<resources::DebugUiState>,
-    mut text: Single<&mut Text, With<components::MouseWorldPosTextLabel>>,
+    mut text: Single<&mut Text, With<components::MouseWorldPosLabel>>,
     mouse_pos: Res<input::resources::MousePos>,
 ) {
-    crate::guard_update!(
+    crate::return_unless!(
         debug_ui_state.is_enabled && (debug_ui_state.is_changed() || mouse_pos.is_changed())
     );
     let pos = mouse_pos.world;
@@ -112,7 +112,7 @@ pub fn update_mouse_world_pos_text(
 pub fn hide_debug_ui(
     _trigger: On<events::HideDebugUi>,
     mut commands: Commands,
-    root_node_entity: Single<Entity, With<components::RootNodeLabel>>,
+    root_node_entity: Single<Entity, With<components::DebugUiRoot>>,
     mut debug_ui_state: ResMut<resources::DebugUiState>,
 ) {
     commands.entity(*root_node_entity).despawn();

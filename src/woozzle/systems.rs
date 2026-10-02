@@ -1,9 +1,9 @@
 use super::events::*;
 use super::resources::*;
-use crate::input::events::ChangeMajorJob;
-use crate::jobs::components::{ActionQueue, GoToPoint, JobLess};
-use crate::jobs::major_jobs::assign_rectangle_patrol;
-use crate::jobs::major_jobs::wandering;
+use crate::input::events::ToggleJobMode;
+use crate::jobs::components::{ActionQueue, GoToPoint, Idle};
+use crate::jobs::planners::plan_rectangle_patrol;
+use crate::jobs::planners::plan_wandering;
 use crate::woozzle;
 use crate::woozzle::components;
 use crate::woozzle::resources;
@@ -12,35 +12,35 @@ use avian2d::prelude::*;
 use bevy::prelude::*;
 use std::cmp::Ordering;
 
-pub fn update_woozzle_hex_data(
-    mut woozzle_data: ResMut<woozzle::resources::Data>,
+pub fn rebuild_woozzles_by_hex(
+    mut woozzles_by_hex: ResMut<woozzle::resources::WoozzlesByHex>,
     query: Query<(Entity, &Transform), With<woozzle::components::Woozzle>>,
     mut commands: Commands,
 ) {
     // Clear the old  map
-    woozzle_data.entities.clear();
+    woozzles_by_hex.entities.clear();
 
     // Repopulate the map with each Woozzle's current hex location
     for (entity, transform) in &query {
         let current_hex = map::components::Hex::from_world(transform.translation.truncate());
 
-        woozzle_data
+        woozzles_by_hex
             .entities
             .entry(current_hex)
             .or_default()
             .push(entity);
     }
-    commands.trigger(DataUpdated);
+    commands.trigger(WoozzlesByHexUpdated);
 }
-pub fn change_major_job(_trigger: On<ChangeMajorJob>, mut flag: ResMut<resources::MajorJobFlag>) {
-    match flag.0 {
-        true => flag.0 = false,
-        false => flag.0 = true,
-    }
+pub fn toggle_job_mode(_trigger: On<ToggleJobMode>, mut job_mode: ResMut<resources::JobMode>) {
+    *job_mode = match *job_mode {
+        JobMode::Wander => JobMode::Patrol,
+        JobMode::Patrol => JobMode::Wander,
+    };
 }
 
-pub fn update_sprite_facing(
-    mut query: Query<(Entity, &LinearVelocity, &mut Sprite), With<components::DirtyFaceDir>>,
+pub fn update_facing(
+    mut query: Query<(Entity, &LinearVelocity, &mut Sprite), With<components::NeedsFacingUpdate>>,
     mut commands: Commands,
 ) {
     for (woozzle, velocity, mut sprite) in &mut query {
@@ -54,7 +54,7 @@ pub fn update_sprite_facing(
         // Remove mark
         commands
             .entity(woozzle)
-            .remove::<components::DirtyFaceDir>();
+            .remove::<components::NeedsFacingUpdate>();
     }
 }
 
@@ -63,7 +63,7 @@ type WoozzleSpriteQuery<'a> = (
     Option<&'a GoToPoint>,
 );
 
-pub fn update_sprite_running(mut query: Query<WoozzleSpriteQuery, With<components::Woozzle>>) {
+pub fn update_walk_animation(mut query: Query<WoozzleSpriteQuery, With<components::Woozzle>>) {
     for (mut anim, go_to_point) in &mut query {
         if go_to_point.is_some() {
             if anim.first_frame != 2 {
@@ -77,48 +77,49 @@ pub fn update_sprite_running(mut query: Query<WoozzleSpriteQuery, With<component
     }
 }
 
-pub fn mark_all_face_dir_dirty(
+pub fn request_facing_updates(
     query: Query<Entity, With<components::Woozzle>>,
     mut commands: Commands,
 ) {
     for woozzle in query {
-        commands.entity(woozzle).insert(components::DirtyFaceDir);
+        commands
+            .entity(woozzle)
+            .insert(components::NeedsFacingUpdate);
     }
 }
 
-pub fn get_a_job(
-    job_flag: Res<MajorJobFlag>,
-    query: Query<(Entity, &mut ActionQueue), With<JobLess>>,
+pub fn assign_job(
+    job_mode: Res<JobMode>,
+    query: Query<(Entity, &mut ActionQueue), With<Idle>>,
     mut commands: Commands,
 ) {
     for (woozzle, mut empty_queue) in query {
-        if job_flag.0 {
-            assign_rectangle_patrol(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 500.0);
-        } else {
-            wandering(&mut empty_queue, Vec2 { x: 0.0, y: 0.0 }, 1200.0);
+        match *job_mode {
+            JobMode::Patrol => plan_rectangle_patrol(&mut empty_queue, Vec2::ZERO, 500.0),
+            JobMode::Wander => plan_wandering(&mut empty_queue, Vec2::ZERO, 1200.0),
         }
 
-        commands.entity(woozzle).remove::<JobLess>();
+        commands.entity(woozzle).remove::<Idle>();
     }
 }
 
-pub fn set_woozle(
-    _trigger: On<input::events::SpawnWoozle>,
-    mut woozzle_data: ResMut<Data>,
+pub fn spawn_woozzle(
+    _trigger: On<input::events::SpawnWoozzle>,
+    mut woozzles_by_hex: ResMut<WoozzlesByHex>,
     mouse_pos: Res<input::resources::MousePos>,
     mut commands: Commands,
 ) {
-    let woozzle_entity = commands
-        .spawn(super::bundles::Woozzle::new(mouse_pos.world))
+    let new_woozzle = commands
+        .spawn(super::bundles::WoozzleBundle::new(mouse_pos.world))
         .id();
 
     let hex = map::components::Hex::from_world(mouse_pos.world);
 
-    woozzle_data
+    woozzles_by_hex
         .entities
         .entry(hex)
         .or_default()
-        .push(woozzle_entity);
+        .push(new_woozzle);
 
-    commands.trigger(DataUpdated);
+    commands.trigger(WoozzlesByHexUpdated);
 }

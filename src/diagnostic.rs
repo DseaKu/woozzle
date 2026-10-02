@@ -21,7 +21,7 @@ fn update_fps(
     diagnostics: Res<DiagnosticsStore>,
     debug_ui_state: Res<debug::resources::DebugUiState>,
 ) {
-    crate::guard_update!(debug_ui_state.is_enabled);
+    crate::return_unless!(debug_ui_state.is_enabled);
     if let Some(fps_diagnostic) = diagnostics.get(&FrameTimeDiagnosticsPlugin::FPS)
         && let Some(fps_value) = fps_diagnostic.smoothed()
     {

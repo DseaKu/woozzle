@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 pub mod components;
-pub mod systems;
+pub mod conversion;
 
 pub struct HexPlugin;
 impl Plugin for HexPlugin {

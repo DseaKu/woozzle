@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 const PATH_PREFIX: &str = "/assets/";
 
-pub fn load_woozzle_assets(
+pub fn load_woozzle_atlas(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -15,14 +15,14 @@ pub fn load_woozzle_assets(
     const ROWS: u32 = 2;
 
     let layout = TextureAtlasLayout::from_grid(UVec2::new(SIZE, SIZE), COLUMNS, ROWS, None, None);
-    commands.insert_resource(resources::WoozzleAsset {
+    commands.insert_resource(resources::WoozzleAtlas {
         image: asset_server.load::<Image>(PATH),
         layout: texture_atlas_layouts.add(layout),
     });
     println!("Loading Woozzle asset, from: {}{}", PATH_PREFIX, PATH);
 }
 
-pub fn load_tileset_assets(
+pub fn load_tileset_atlas(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -33,12 +33,12 @@ pub fn load_tileset_assets(
 
     let layout = TextureAtlasLayout::from_grid(
         UVec2::new(SIZE, SIZE),
-        map::components::TerrainType::n_of_types() as u32,
+        map::components::TerrainType::count() as u32,
         ROWS,
         None,
         None,
     );
-    commands.insert_resource(resources::TilesetAsset {
+    commands.insert_resource(resources::TilesetAtlas {
         image: asset_server.load::<Image>(PATH),
         layout: texture_atlas_layouts.add(layout),
     });
