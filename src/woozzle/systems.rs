@@ -12,12 +12,13 @@ use avian2d::prelude::*;
 use bevy::prelude::*;
 use std::cmp::Ordering;
 
+/// Rebuilds the hex -> woozzles index from scratch.
 pub fn rebuild_woozzles_by_hex(
     mut woozzles_by_hex: ResMut<woozzle::resources::WoozzlesByHex>,
     query: Query<(Entity, &Transform), With<woozzle::components::Woozzle>>,
     mut commands: Commands,
 ) {
-    // Clear the old  map
+    // Clear the old map
     woozzles_by_hex.entities.clear();
 
     // Repopulate the map with each Woozzle's current hex location
@@ -32,6 +33,7 @@ pub fn rebuild_woozzles_by_hex(
     }
     commands.trigger(WoozzlesByHexUpdated);
 }
+
 pub fn toggle_job_mode(_trigger: On<ToggleJobMode>, mut job_mode: ResMut<resources::JobMode>) {
     *job_mode = match *job_mode {
         JobMode::Wander => JobMode::Patrol,
@@ -39,6 +41,7 @@ pub fn toggle_job_mode(_trigger: On<ToggleJobMode>, mut job_mode: ResMut<resourc
     };
 }
 
+/// Flips the sprite to match horizontal movement (the sheet faces left).
 pub fn update_facing(
     mut query: Query<(Entity, &LinearVelocity, &mut Sprite), With<components::NeedsFacingUpdate>>,
     mut commands: Commands,
@@ -63,6 +66,7 @@ type WoozzleSpriteQuery<'a> = (
     Option<&'a GoToPoint>,
 );
 
+/// Uses frames 2-3 while walking, 0-1 otherwise.
 pub fn update_walk_animation(mut query: Query<WoozzleSpriteQuery, With<components::Woozzle>>) {
     for (mut anim, go_to_point) in &mut query {
         if go_to_point.is_some() {
@@ -77,6 +81,7 @@ pub fn update_walk_animation(mut query: Query<WoozzleSpriteQuery, With<component
     }
 }
 
+/// Marks all woozzles for a facing update (runs on a timer).
 pub fn request_facing_updates(
     query: Query<Entity, With<components::Woozzle>>,
     mut commands: Commands,
@@ -88,6 +93,7 @@ pub fn request_facing_updates(
     }
 }
 
+/// Fills the queues of idle woozzles according to `JobMode`.
 pub fn assign_job(
     job_mode: Res<JobMode>,
     query: Query<(Entity, &mut ActionQueue), With<Idle>>,
@@ -103,6 +109,7 @@ pub fn assign_job(
     }
 }
 
+/// Spawns a woozzle at the cursor and registers it in `WoozzlesByHex`.
 pub fn spawn_woozzle(
     _trigger: On<input::events::SpawnWoozzle>,
     mut woozzles_by_hex: ResMut<WoozzlesByHex>,

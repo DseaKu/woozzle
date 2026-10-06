@@ -18,6 +18,7 @@ impl Plugin for GraphicsPlugin {
     }
 }
 
+/// Z layers for sprites; higher draws on top.
 pub enum DrawOrder {
     Ground,
     OnGround,

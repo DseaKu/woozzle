@@ -7,6 +7,7 @@ use bevy::prelude::*;
 // Bevy culls sprites outside the camera by itself, so every entity
 // gets its sprite once on spawn.
 
+/// Gives every new woozzle its sprite and idle animation.
 pub fn insert_woozzle_sprite(
     add: On<Add, woozzle::components::Woozzle>,
     mut commands: Commands,
@@ -18,6 +19,7 @@ pub fn insert_woozzle_sprite(
     ));
 }
 
+/// Gives every new tile the sprite matching its terrain.
 pub fn insert_tile_sprite(
     add: On<Add, map::components::TerrainType>,
     tiles: Query<&map::components::TerrainType>,
@@ -32,6 +34,7 @@ pub fn insert_tile_sprite(
         .insert(TileSprite::new(&tileset_atlas, *terrain_type));
 }
 
+/// Advances on-screen animations, wrapping back to `first_frame`.
 pub fn animate_sprites(
     time: Res<Time>,
     mut query: Query<(&mut SpriteAnimation, &mut Sprite, &ViewVisibility)>,

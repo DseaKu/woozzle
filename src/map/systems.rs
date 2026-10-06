@@ -5,6 +5,7 @@ use super::resources::*;
 use crate::input;
 use bevy::prelude::*;
 
+/// Despawns the tile under the cursor.
 pub fn remove_tile(
     _trigger: On<input::events::RemoveTile>,
     mut tiles_by_hex: ResMut<TilesByHex>,
@@ -18,6 +19,7 @@ pub fn remove_tile(
     commands.trigger(TilesChanged);
 }
 
+/// Places a grass tile under the cursor.
 pub fn place_tile(
     _trigger: On<input::events::PlaceTile>,
     mut tiles_by_hex: ResMut<TilesByHex>,

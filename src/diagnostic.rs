@@ -11,6 +11,7 @@ impl Plugin for DiagnosticPlugin {
     }
 }
 
+/// Smoothed FPS, only updated while the debug UI is shown.
 #[derive(Resource, Default)]
 pub struct Fps {
     pub value: f64,

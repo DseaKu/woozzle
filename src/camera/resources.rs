@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+/// World-space rectangle currently visible through the camera.
 #[derive(Resource, Default)]
 pub struct PlayerView {
     pub min: Vec2,

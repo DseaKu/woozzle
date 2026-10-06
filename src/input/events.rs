@@ -1,3 +1,5 @@
+//! Player intents, triggered by input systems and observed by gameplay.
+
 use bevy::prelude::*;
 
 #[derive(Event)]

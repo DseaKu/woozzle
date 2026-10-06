@@ -2,6 +2,7 @@ use super::resources::*;
 use crate::map;
 use bevy::prelude::*;
 
+/// Loops the atlas index over `first_frame..=last_frame` at a fixed rate.
 #[derive(Component)]
 pub struct SpriteAnimation {
     pub timer: Timer,

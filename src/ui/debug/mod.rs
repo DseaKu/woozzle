@@ -15,7 +15,7 @@ impl Plugin for DebugUiPlugin {
         app.add_observer(systems::toggle_debug_ui)
             .add_observer(systems::show_debug_ui)
             .add_observer(systems::hide_debug_ui)
-            // Attach the run condition here
+            // Throttled so the number stays readable
             .add_systems(
                 Update,
                 systems::update_fps_text

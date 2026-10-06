@@ -2,6 +2,7 @@ use super::conversion;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
+/// Axial hex coordinate (pointy-top layout).
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct Hex {
     pub q: i32,

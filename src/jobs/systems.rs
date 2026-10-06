@@ -3,6 +3,7 @@ use crate::woozzle::components::NeedsFacingUpdate;
 use super::components::*;
 use bevy::prelude::*;
 
+/// Starts the next queued action for every woozzle that isn't `Busy`.
 pub fn start_next_action(
     mut woozzle_action_queues: Query<(Entity, &mut ActionQueue), Without<Busy>>,
     mut commands: Commands,

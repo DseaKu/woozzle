@@ -1,12 +1,13 @@
 use crate::woozzle::components::{MoveSpeed, StuckCounter};
 use crate::{graphics, jobs::components::ActionQueue};
 
-const BASE_SPEED: f32 = 150.0;
+const BASE_SPEED: f32 = 150.0; // World units per second
 pub const COLLISION_RADIUS: f32 = 5.5;
 
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
+/// A fresh woozzle with physics and an empty job queue; the sprite is added by graphics.
 #[derive(Bundle)]
 pub struct WoozzleBundle {
     label: super::components::Woozzle,

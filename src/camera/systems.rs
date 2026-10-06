@@ -6,10 +6,12 @@ const INITIAL_ZOOM: f32 = 10.0;
 const CAMERA_SPEED: f32 = 200.0;
 
 const ZOOM_SPEED: f32 = 0.05;
+// Projection scale snaps to multiples of this
 const ZOOM_STEP_SIZE: f32 = 0.0625;
 const MIN_SCALE: f32 = ZOOM_STEP_SIZE * 2.0;
 const MAX_SCALE: f32 = ZOOM_STEP_SIZE * 6.0;
 
+/// Pans the camera with WASD at a constant speed.
 pub fn move_camera(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
@@ -35,6 +37,7 @@ pub fn move_camera(
     }
 }
 
+/// Zooms with the mouse wheel, snapped to `ZOOM_STEP_SIZE` and clamped.
 pub fn zoom_camera(
     mut mouse_wheel_events: MessageReader<MouseWheel>,
     camera_query: Single<&mut Projection, With<Camera2d>>,
@@ -65,6 +68,7 @@ pub fn spawn_camera(mut commands: Commands) {
     ));
 }
 
+/// Recomputes `PlayerView` from the camera and triggers `PlayerViewUpdated` on change.
 pub fn update_player_view(
     mut player_view: ResMut<resources::PlayerView>,
     camera_query: Single<(&Camera, &GlobalTransform, &Projection)>,

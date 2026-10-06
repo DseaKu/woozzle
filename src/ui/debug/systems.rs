@@ -3,6 +3,7 @@ use bevy::prelude::*;
 
 use super::{components, events, resources};
 
+/// Spawns the overlay with all sections and labels.
 pub fn show_debug_ui(
     _trigger: On<events::ShowDebugUi>,
     mut commands: Commands,
@@ -28,6 +29,8 @@ pub fn show_debug_ui(
         });
     debug_ui_state.is_enabled = true;
 }
+
+// Template for a new label system; all of them are no-ops while the overlay is hidden
 // pub fn update_XXX_text(
 //     debug_ui_state: Res<resources::DebugUiState>,
 //     mut text: Single<&mut Text, With<components::XXXLabel>>,

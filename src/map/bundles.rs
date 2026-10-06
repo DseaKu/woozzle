@@ -3,6 +3,7 @@ use bevy::prelude::*;
 
 use crate::graphics;
 
+/// Terrain tile at a hex; the sprite is added by the graphics plugin.
 #[derive(Bundle)]
 pub struct TileBundle {
     tile_type: TerrainType,

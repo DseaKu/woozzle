@@ -2,8 +2,10 @@ use super::resources;
 use crate::map;
 use bevy::prelude::*;
 
+// Only used for log output
 const PATH_PREFIX: &str = "/assets/";
 
+/// Woozzle sheet: 2x2 grid of 16px frames (0-1 idle, 2-3 walk).
 pub fn load_woozzle_atlas(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -22,6 +24,7 @@ pub fn load_woozzle_atlas(
     println!("Loading Woozzle asset, from: {}{}", PATH_PREFIX, PATH);
 }
 
+/// Tileset: 32px tiles, one column per `TerrainType`.
 pub fn load_tileset_atlas(
     mut commands: Commands,
     asset_server: Res<AssetServer>,

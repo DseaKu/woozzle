@@ -5,6 +5,7 @@ pub mod events;
 mod resources;
 mod systems;
 
+/// Radial context menu (work in progress).
 pub struct RadialMenuPlugin;
 impl Plugin for RadialMenuPlugin {
     fn build(&self, app: &mut App) {
@@ -13,6 +14,7 @@ impl Plugin for RadialMenuPlugin {
     }
 }
 
+/// Gameplay commands a menu leaf can trigger.
 #[allow(dead_code)]
 #[derive(Clone)]
 pub enum RadialAction {

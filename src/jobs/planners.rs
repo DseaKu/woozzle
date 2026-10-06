@@ -2,6 +2,7 @@ use crate::jobs::components::{Action, ActionQueue};
 use bevy::prelude::*;
 use rand;
 
+/// Queues a square loop from `start_pos`: right, down, left, back to start.
 pub fn plan_rectangle_patrol(action_queue: &mut ActionQueue, start_pos: Vec2, size: f32) {
     const ARRIVAL_TOLERANCE: f32 = 50.0;
     action_queue.0.push_back(Action::GoToPoint {
@@ -26,6 +27,7 @@ pub fn plan_rectangle_patrol(action_queue: &mut ActionQueue, start_pos: Vec2, si
     });
 }
 
+/// Queues random walks within `range` of `start_pos`, mixed with pauses.
 pub fn plan_wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f32) {
     const MAX_ACTIONS: u32 = 1;
     const MAX_WAIT_DURATION: f32 = 5.0;
@@ -35,7 +37,7 @@ pub fn plan_wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f3
 
     for _ in 0..num_actions {
         match rand::random_range(0..10) {
-            // Big step
+            // Big step (60%)
             0..6 => {
                 let random_point = Vec2::new(
                     rand::random_range(-range..range),
@@ -47,7 +49,7 @@ pub fn plan_wandering(action_queue: &mut ActionQueue, start_pos: Vec2, range: f3
                     reset_stuck_on_arrival: true,
                 });
             }
-            // Wait
+            // Wait (30%)
             6..9 => {
                 let duration = rand::random_range(0.0..MAX_WAIT_DURATION);
                 action_queue.0.push_back(Action::Wait(duration));

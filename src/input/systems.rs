@@ -3,6 +3,9 @@ use super::resources;
 use bevy::prelude::*;
 use bevy::window;
 
+// Bindings: Tab debug UI, 1 job mode, E spawn woozzle (held), LMB place tile, MMB remove tile
+
+// Not registered yet, radial menu is WIP
 #[allow(dead_code)]
 pub fn trigger_open_radial_menu(
     mouse_input: Res<ButtonInput<MouseButton>>,

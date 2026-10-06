@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use strum::EnumCount;
 use strum_macros::EnumCount;
 
+/// Terrain of a map tile; each variant maps to a tileset column.
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, EnumCount, Serialize, Deserialize)]
 pub enum TerrainType {
     Empty,

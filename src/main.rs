@@ -39,9 +39,10 @@ fn main() {
             .set(ImagePlugin::default_nearest()),
     )
     .add_plugins(FrameTimeDiagnosticsPlugin::default())
-    // Own Plugins
+    // Physics, no gravity for the top-down view
     .add_plugins(PhysicsPlugins::default())
     .insert_resource(Gravity(Vec2::ZERO))
+    // Own Plugins
     .add_plugins(jobs::JobsPlugin)
     .add_plugins(ui::UiPlugin)
     .add_plugins(input::InputPlugin)

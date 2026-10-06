@@ -1,11 +1,13 @@
 use super::components::Hex;
 use bevy::prelude::*;
 
-// 16 bit tile assets
+// Hex radius (center to corner) per axis, in world units
+
+// 16px tile assets
 // const HEX_WIDTH: f32 = 9.25;
 // const HEX_HEIGHT: f32 = 8.0;
 
-// 32 bit tile assets
+// 32px tile assets
 pub const HEX_WIDTH: f32 = 18.5;
 pub const HEX_HEIGHT: f32 = 16.0;
 
@@ -14,6 +16,7 @@ pub const SQRT_3: f32 = 1.732_050_8;
 pub const TWO_THIRDS: f32 = 2.0 / 3.0;
 pub const THREE_HALVES: f32 = 3.0 / 2.0;
 
+/// Center of the hex in world space, rounded to whole pixels.
 pub fn hex_to_world(hex: Hex) -> Vec2 {
     let q = hex.q as f32;
     let r = hex.r as f32;
@@ -25,6 +28,7 @@ pub fn hex_to_world(hex: Hex) -> Vec2 {
     Vec2::new(x.round(), y.round())
 }
 
+/// Hex containing the given world position.
 pub fn world_to_hex(pixel: Vec2) -> Hex {
     let px = pixel.x / HEX_WIDTH;
     let py = pixel.y / HEX_HEIGHT;
@@ -36,6 +40,8 @@ pub fn world_to_hex(pixel: Vec2) -> Hex {
     hex_round(q_float, r_float)
 }
 
+/// Rounds fractional axial coords to the nearest hex. Uses cube coords (q + r + s = 0):
+/// the component with the largest rounding error is recomputed from the other two.
 fn hex_round(frac_q: f32, frac_r: f32) -> Hex {
     let frac_s = -frac_q - frac_r;
 

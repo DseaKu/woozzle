@@ -7,6 +7,8 @@ const INDENTED_MARGIN: f32 = 30.0;
 #[derive(Component)]
 pub struct DebugUiRoot;
 
+// Markers for the text lines the update_*_text systems write to
+
 #[derive(Component)]
 pub struct FpsLabel;
 
@@ -25,6 +27,7 @@ pub struct TileCountLabel;
 #[derive(Component)]
 pub struct WoozzleCountLabel;
 
+/// Top-left column holding all debug sections.
 #[derive(Bundle)]
 pub struct DebugUiRootBundle {
     node: Node,
@@ -64,6 +67,7 @@ impl SectionHeader {
     }
 }
 
+/// Indented text line, tagged with marker `L` so it can be queried.
 #[derive(Bundle)]
 pub struct SectionItem<L: Component> {
     text: Text,

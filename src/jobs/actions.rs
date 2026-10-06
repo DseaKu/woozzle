@@ -4,8 +4,10 @@ use crate::woozzle::components::{GhostMode, MoveSpeed, StuckCounter, Woozzle};
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
+/// Speed multiplier while in `GhostMode`.
 const GHOST_SPEED_FACTOR: f32 = 1.0;
 
+/// Holds the woozzle still until the wait runs out, then frees it for the next action.
 pub fn run_wait(
     query: Query<(Entity, &mut LinearVelocity, &mut Wait), With<Woozzle>>,
     mut commands: Commands,
@@ -23,6 +25,7 @@ pub fn run_wait(
     }
 }
 
+/// Counts down `GhostMode` and restores the collider when it ends.
 pub fn tick_ghost_mode(
     mut query: Query<(Entity, &mut GhostMode)>,
     time: Res<Time>,
@@ -51,6 +54,10 @@ type MoverQuery<'a> = (
     &'a CollidingEntities,
     &'a mut StuckCounter,
 );
+/// Steers woozzles towards their `GoToPoint` target.
+///
+/// While blocked, `StuckCounter` grows: it widens the arrival tolerance, triggers a brief
+/// collider-less "micro ghost" step and, if still stuck, a long `GhostMode`.
 pub fn run_go_to_point(
     mut query: Query<MoverQuery, With<Woozzle>>,
     time: Res<Time>,
@@ -72,6 +79,7 @@ pub fn run_go_to_point(
         const GHOST_DURATION: f32 = 10.0;
         const MICRO_GHOST_DURATION: f32 = 0.2;
         const ARRIVAL_TOLERANCE_MAX_FACTOR: f32 = 3.0;
+        // Counter grows by this per blocked tick and shrinks by 1 per free tick
         const STUCK_STEP: u32 = 3;
 
         let dst_pos = go_to_point.target;
