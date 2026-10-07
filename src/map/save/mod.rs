@@ -1,16 +1,13 @@
-use super::components::{Hex, TerrainType};
 use bevy::prelude::*;
-use serde::{Deserialize, Serialize};
 
 pub mod components;
+mod resources;
 mod systems;
 
-#[derive(Default, Serialize, Deserialize)]
 pub struct SavePlugin;
 impl Plugin for SavePlugin {
-    fn build(&self, _app: &mut App) {}
-}
-
-pub struct MapSaveData {
-    pub tiles: Vec<(Hex, TerrainType)>,
+    fn build(&self, app: &mut App) {
+        app.init_resource::<resources::MapSaveData>()
+            .add_systems(Startup, systems::load_map_save);
+    }
 }
