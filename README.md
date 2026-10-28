@@ -4,9 +4,9 @@ A tinker experiment in Rust and [Bevy](https://bevy.org). I wrote it to try out
 a lot of entities, each with its own task pipeline, and to see how far I can get
 on efficiency.
 
-<video src="doc/demo.mp4" controls width="100%"></video>
+![Woozzle demo](doc/demo.gif)
 
-[Watch the demo](doc/demo.mp4)
+[Full-quality video](doc/demo.mp4)
 
 The task system design is in [doc/task_system.md](doc/task_system.md).
 
