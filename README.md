@@ -7,7 +7,6 @@ on efficiency.
 ![Woozzle demo](doc/demo.gif)
 
 
-The task system design is in [doc/task_system.md](doc/task_system.md).
 
 ## Run
 
