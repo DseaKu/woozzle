@@ -5,9 +5,9 @@ use std::fs;
 const SAVE_PATH: &str = "saves/map.json";
 
 enum LoadOutcome {
-    Loaded(MapSaveData),
-    NoSaveFile,
-    Corrupt,
+    Loaded(MapSaveData), // File exists and parsed
+    NoSaveFile,          // First run, no save yet
+    Corrupt,             // Read or parse failed
 }
 
 pub fn load_map_save(mut save_data: ResMut<MapSaveData>) {
@@ -27,6 +27,8 @@ pub fn load_map_save(mut save_data: ResMut<MapSaveData>) {
     };
 }
 
+/// Attempts to read and parse the save file.
+/// Distinguishes between missing file (first run) and read/parse errors.
 fn load_from_disk() -> LoadOutcome {
     let json = match fs::read_to_string(SAVE_PATH) {
         Ok(json) => json,
@@ -47,6 +49,7 @@ fn load_from_disk() -> LoadOutcome {
     }
 }
 
+/// Deserializes JSON string into MapSaveData.
 fn parse_save_data(json: &str) -> Option<MapSaveData> {
     match serde_json::from_str(json) {
         Ok(data) => Some(data),
